@@ -13,6 +13,8 @@ Sub Main()
 	Dim ddlText_
 	Dim input_
 	Dim output_
+	Dim bin_
+	
 	Set fso_ = CreateObject("Scripting.FileSystemObject")
 	
 	scriptFolderPath_ = fso_.GetFile(WScript.ScriptFullName).ParentFolder.Path
@@ -38,6 +40,16 @@ Sub Main()
 	If fso_.FileExists(scriptFolderPath_ & "/create_all_table.sql") Then
 		fso_.DeleteFile(scriptFolderPath_ & "/create_all_table.sql")
 	End If
+	output_.Position = 0
+	output_.Type = 1
+	output_.Position = 3
+	bin_ = output_.Read
+	
+	Set output_ = CreateObject("ADODB.Stream")
+	output_.Type = 1
+	output_.Open
+	output_.Write(bin_)
+	
 	output_.SaveToFile scriptFolderPath_ & "/create_all_table.sql"
 End Sub
 
