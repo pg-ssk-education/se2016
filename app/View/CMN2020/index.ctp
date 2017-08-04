@@ -36,13 +36,13 @@
                 <input type="checkbox" id="selected[0]" name="selected[0]" value=0>
               </td>
               <td class="col-wf-route-id">
-                <?php h($wfRoute['WfRoute']['WF_ROUTE_ID']);?>
+                <?php echo h($wfRoute['WfRoute']['WF_ROUTE_ID']);?>
               </td>
               <td class="col-wf-route-name">
-                <?php h($wfRoute['WfRoute']['WF_ROUTE_NAME']);?>
+                <?php echo h($wfRoute['WfRoute']['WF_ROUTE_NAME']);?>
               </td>
               <td class="col-route">
-                <?php h($wfRouteTable[$wfRoute['WfRoute']['WF_ROUTE_ID']]);?>
+                <?php echo h($wfRouteTable[$wfRoute['WfRoute']['WF_ROUTE_ID']]);?>
               </td>
             </tr>
            <?php endforeach; ?>
