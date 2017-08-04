@@ -1,39 +1,73 @@
 
 <div class="page-content" style="font-size:14pt; padding-left:10px">$loginUserName
 	<br><br>
-	³”F‘Ò‚¿\¿‘ˆê——
-	<div class="container table-border table-border-design">
-		<table>
-			<tr>
-				<th style="width:130px">
-					\¿‘ID
-				</th>
-				<th style="width:200px">
-					\¿‘–¼
-				</th>
-				<th style="width:500px">
-					ƒRƒƒ“ƒg
-				</th>
-			</tr>
-			
-			<?php foreach ($informations as $information): ?>
-			
-				<tr>
-					<td style="text-align:center">
-						<?php echo h($information['Information']['ID']); ?>
-					</td>
-					<td style="text-align:center">
-						<?php echo h($information['Information']['NAME']); ?>
-					</td>
-					<td>
-						<?php echo h($information['Information']['COMMENT']); ?>
-					</td>
-				</tr>
-			
-			<?php endforeach; ?>
-			
-			
-		</table>
+	æ‰¿èªå¾…ã¡ç”³è«‹æ›¸ä¸€è¦§
+	<div class="page-block">
+		<div class="table-simple" name="lstInfo">
+			<table>
+				<thead>
+					<tr>
+						<th>
+							<div class="CMN1010-col-info">
+								
+							</div>
+						</th>
+						<th>
+							<div class="CMN1010-col-info">
+								ãƒ¬ãƒ™ãƒ«
+							</div>
+						</th>
+						<th>
+							<div class="CMN1010-col-info">
+								ã‚³ãƒ¡ãƒ³ãƒˆ
+							</div>
+						</th>
+						<th>
+							<div class="CMN1010-col-info">
+								ç¢ºèª
+							</div>
+						</th>
+						<th>
+							<div class="CMN1010-col-info">
+								é·ç§»
+							</div>
+						</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($notifications as $notification) { ?>
+					<tr>
+						<td>
+							<div class="CMN1010-col-info col-text">
+								
+							</div>
+						</td>
+						<td>
+							<div class="CMN1010-col-info col-text">
+								<?php echo h($notification['Notification']['LEVEL']); ?>
+							</div>
+						</td>
+						<td>
+							<div class="CMN1010-col-info col-text">
+								<?php echo h($notification['Notification']['COMMENT']); ?>
+							</div>
+						</td>
+						<td>
+							<div class="CMN1010-col-info col-text">
+								<?php echo h($notification['Notification']['CONFIRMED']); ?>
+							</div>
+						</td>
+						<td>
+							<div class="CMN1010-col-info col-text">
+								<?php echo h($notification['Notification']['FUNCTION_ID']); ?>
+							</div>
+						</td>
+					</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 
