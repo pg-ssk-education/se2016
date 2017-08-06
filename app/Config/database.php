@@ -70,10 +70,10 @@ class DATABASE_CONFIG {
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'user',
-		'password' => 'password',
-		'database' => 'database_name',
-		'prefix' => '',
+		'login' => 'education',
+		'password' => 'education',
+		'database' => 'education',
+		'prefix' => 'se2016_',
 		//'encoding' => 'utf8',
 	);
 
