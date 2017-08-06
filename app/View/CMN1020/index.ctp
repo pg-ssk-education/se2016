@@ -1,10 +1,10 @@
 <?php
-	echo $this->Html->css('CMN1020');
-	echo $this->Html->script('CMN1020.js');
+	echo $this->Html->css('CMN1020', null, array('inline' => false));
+	echo $this->Html->script('CMN1020.js', array('inline' => false));
 
 	echo $this->Form->create(null, ['url' => ['action' => 'send']]);
 ?>
-<div class="CMN1000-page-content">
+<div class="page-content">
 	<div class="page-block table-border">
 		<table>
 			<tr>

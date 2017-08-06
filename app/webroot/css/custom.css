@@ -1,0 +1,35 @@
+div.page-header {
+	background-color :#C0FFC0 ;
+	border-color     :black   ;
+}
+
+div.page-footer {
+	background-color:#F0E090          ;
+	border-top      :solid 1px #FFF0B0;
+	color           :#807020          ;
+	font-weight     :bold             ;
+}
+
+div.table-simple th, div.table-multi th, div.table-border th {
+	border-color     :#808080;
+	background-color :#A0E0B0;
+}
+
+div.table-simple tbody tr:nth-of-type(2n) td, div.table-multi tbody tr:nth-of-type(2n) td {
+	background-color :#F0FFFF;
+}
+
+div.table-simple tbody tr:nth-of-type(2n+1) td, div.table-multi tbody tr:nth-of-type(2n+1) td {
+	background-color :#FFFFFF;
+}
+
+div.table-border td {
+    background-color :#FFFFFF;
+}
+
+div.table-border th.require {
+    background-color :#FFE0E0;
+}
+
+
+

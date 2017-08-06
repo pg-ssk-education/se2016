@@ -11,6 +11,10 @@ class CMN1000Controller extends AppController {
 	public function index() {
 		$this->set("title_for_layout","ログイン"); 
 		$this->set('notifications', $this->Notification->getNotification());
+		
+		$this->set("testdata", $this->User->test());
+		//$this->set("testdatas", 'aiueo');
+		
 	}
 	
 	public function login() {

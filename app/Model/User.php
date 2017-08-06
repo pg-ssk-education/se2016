@@ -26,4 +26,8 @@ class User extends AppModel
 		));
     }
     
+    public function test() {
+    	return $this->query('select * from se2016_m_user', array());
+    }
+    
 }

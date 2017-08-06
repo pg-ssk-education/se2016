@@ -6,6 +6,9 @@
 ?>
 <div class="CMN1000-page-content">
 	<div class="page-block table-border">
+					<?php foreach ($testdatas as $testdata) { ?>
+	<?php echo $testdata['User']['NAME']; ?>
+					<?php } ?>
 		<table>
 			<tr>
 				<th class="require">
