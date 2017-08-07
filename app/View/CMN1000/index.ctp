@@ -3,7 +3,7 @@
 	echo $this->Html->script('CMN1000.js');
 	
 	// ログインを3回失敗するとログイン画面を1分間ロックする
-	if ($failures[0]['FAILURE_COUNT'] >= 3 && $failures[0]['IS_LOCKED']){
+	if (!empty($failures) && $failures[0]['FAILURE_COUNT'] >= 3 && $failures[0]['IS_LOCKED']){
 		return;
 	}
 
