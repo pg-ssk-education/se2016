@@ -38,4 +38,4 @@ BEGIN
     ;
 END
 $$
-$DELIMITER ;
+DELIMITER ;
