@@ -50,7 +50,7 @@
                       <?php echo h($user['User']['MAIL_ADDRESS']); ?>
                     </td>
                   </tr>
-                <? endforeach; ?>
+                <?php endforeach; ?>
               </tbody>
             </table>
           </div>
