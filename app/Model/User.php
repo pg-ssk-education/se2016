@@ -26,6 +26,7 @@ class User extends AppModel
 		));
     }
     
+
     public function getUser(){
     	return $this->find('all',array(
     		'order' => array('User.USER_ID' => 'asc')
