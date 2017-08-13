@@ -1,6 +1,11 @@
 <?php
 	echo $this->Html->css('CMN1000');
 	echo $this->Html->script('CMN1000.js');
+	
+	// ログインを3回失敗するとログイン画面を1分間ロックする
+	if (!empty($failures) && $failures[0]['FAILURE_COUNT'] >= 3 && $failures[0]['IS_LOCKED']){
+		return;
+	}
 
 	echo $this->Form->create(false, array('controller'=>'CMN1000', 'action'=>'login'));
 ?>
