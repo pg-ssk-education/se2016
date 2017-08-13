@@ -31,4 +31,4 @@ BEGIN
     ;
 END
 $$
-$DELIMITER ;
+DELIMITER ;
