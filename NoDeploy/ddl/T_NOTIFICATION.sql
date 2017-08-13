@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS {%prefix}T_NOTIFICATION;
 
 CREATE TABLE {%prefix}T_NOTIFICATION (
     NOTIFICATION_ID CHAR(36)      NOT NULL COMMENT '通知ID'
-   ,TARGET_USER_ID  CHAR(36)      NOT NULL COMMENT '対象ユーザID'
+   ,TARGET_USER_ID  VARCHAR(32)   NOT NULL COMMENT '対象ユーザID'
    ,LEVEL           VARCHAR(1)    NOT NULL COMMENT '通知レベル' /* I:information W:warning A:Alert */
    ,COMMENT         VARCHAR(1024) COMMENT 'コメント'
    ,CONFIRMED       VARCHAR(1)    NOT NULL COMMENT '確認フラグ(0:未確認, 1:確認済み)'
