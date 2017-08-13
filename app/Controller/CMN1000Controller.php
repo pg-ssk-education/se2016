@@ -12,9 +12,9 @@ class CMN1000Controller extends AppController {
 		$this->set("title_for_layout","ログイン"); 
 		
 		// ログインを3回失敗するとログイン画面を1分間ロックする
-		$this->set('failures', $this->InvalidAccess->validate($this->request->clientIp(false)));
+		$this->set('failures', $this->InvalidAccess->findByClientIp($this->request->clientIp(false)));
 		// インフォメーションを取得する
-		$this->set('notifications', $this->Notification->getNotification(""));
+		$this->set('notifications', $this->Notification->findAllByUserId(""));
 	}
 	
 	public function login() {
@@ -28,13 +28,7 @@ class CMN1000Controller extends AppController {
 			
 			if(empty($user)){
 				// ログインの失敗を記録する。
-				$this->InvalidAccess->save(['InvalidAccess' => [
-					'ACCESS_ID' => DboSource::expression('UUID()'), 
-					'CLIENT_IP' => $this->request->clientIp(false), 
-					'ACCESS_DATETIME' => DboSource::expression('NOW()'),
-					'INS_USER_ID' => $this->request->data('txtLoginId'),
-					'UPD_USER_ID' => $this->request->data('txtLoginId'),
-				]]);
+				$this->InvalidAccess->saveInvalidClientIp($this->request->clientIp(false));
 				
 				$this->setError('ログインできません。ユーザＩＤ、パスワードを確認してください。(ERR_CMN1000_01)');
 			} else {
