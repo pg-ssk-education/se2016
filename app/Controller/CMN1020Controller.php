@@ -2,7 +2,6 @@
 class CMN1020Controller extends AppController {
 	public $helpers = ['Html', 'Form'];
 	public $uses = ['User'];
-	public $components = ['Session'];
 
 	public function index() {
 		$this->render('index');

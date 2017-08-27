@@ -8,9 +8,8 @@ class Notification extends AppModel {
     /** 主キー：名前がidの場合のみ、省略できる。 */
     var $primaryKey = 'NOTIFICATION_ID';
     
-    public function getNotification($userId) {
+    public function getNotification() {
     	return $this->find('all', array(
-    		'conditions' => array('Notification.TARGET_USER_ID' => $userId),
     		'order' => array('Notification.ROW_NUM' => 'asc')
     	));
     }
