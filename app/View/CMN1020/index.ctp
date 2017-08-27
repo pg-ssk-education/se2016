@@ -1,15 +1,8 @@
 <?php
-<<<<<<< HEAD
-$this->Html->css('CMN1020', null, ['inline'=>false]);
-$this->Html->script('CMN1020.js', ['inline'=>false]);
-=======
 	echo $this->Html->css('CMN1020', null, ['inline' => false]);
 	echo $this->Html->script('CMN1020.js', ['inline' => false]);
-
-	echo $this->Form->create(false, ['url' => ['action' => 'send']]);
->>>>>>> remotes/origin/feature/cmn1020
+	echo $this->Form->create(false, ['url'=>['controller'=>'CMN1020', 'action'=>'send']])
 ?>
-<?php echo $this->Form->create(null, ['url'=>['controller'=>'CMN1020', 'action'=>'send']]); ?>
 <div class="page-content">
 	<div class="page-block table-border">
 		<table>
