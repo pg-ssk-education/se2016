@@ -24,13 +24,34 @@ class CMN1010Controller extends AppController {
 		}
 	}
 	
+	public function action() {
 	
-	public function confirm() {
+		switch ($this->request->data('hidAction') {
+			case "reload":
+				reload();
+				break;
+			
+			case "confirm":
+				confirm();
+				break;
+			
+			default:
+				//404エラーページに飛ばす
+	
+	}
+	
+	
+	public function reload() {
 		
 		
 		
 	
 	}
 	
+	
+	public function confirm() {
+	
+	
+	}
 	
 }

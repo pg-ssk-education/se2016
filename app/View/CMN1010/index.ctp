@@ -1,6 +1,7 @@
 <?php
 	
-	echo $this->Form->create(false, array('controller'=>'CMN1010', 'action'=>'index'));
+	echo $this->Form->create(false, ['controller'=>'CMN1010', 'action'=>'action']);
+	echo $this->Html->script('CMN1010.js', ['inline' => false]);
 
 ?>
 
@@ -19,7 +20,8 @@
 			echo $this->Form->input('class3', array('type' => 'checkbox', 'label' => '警告'));
 			echo $this->Form->input('class4', array('type' => 'checkbox', 'label' => '確認済み'));
 			
-			echo $this->Form->submit('再表示', array('name' => 'redisplay'));
+			echo $this->Form->submit('再表示', array('name' => 'reload'));
+			echo $this->Form->hidden('hidAction');
 			
 			
 			
