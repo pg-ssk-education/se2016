@@ -1,8 +1,15 @@
+<?php
+  echo $this->Form->create(false,['controller'=>'CMN2000','action'=>'action']);
+  echo $this->Html->script('CMN2000.js',['inline'=>false]);
+?>
 <div class="page-content">
   <div class="container">
-    <input type="button" id="btnAdd" name="btnAdd" value="追加">
-    <input type="button" id="btnEdit" name="btnEdit" value="編集">
-    <input type="button" id="btnDelete" name="btnDelete" value="削除">
+    <?php
+      echo $this->Form->button('追加', ['name'=>'btnAdd']);
+      echo $this->Form->button('編集', ['name'=>'btnEdit']);
+      echo $this->Form->button('削除', ['name'=>'btnDelete']);
+      echo $this->Form->hidden('hidAction');
+    ?>
   </div>
   <div class="container">
     <table>
