@@ -25,14 +25,6 @@ class User extends AppModel
 			'recursive' => -1
 		));
     }
-
-    public function findByUserId($userId) {
-      var $return = $this->find('first' [
-        'conditions' => ['User.USER_ID' => $userId],
-        'recursive' => -1);
-      $this->log($this->getDataSource()->getLog(), LOG_INFO);
-      return $return;
-    }
     
     public function update($data) {
     	$data['User']['UPD_DATETIME'] = DboSource::expression('NOW()');
