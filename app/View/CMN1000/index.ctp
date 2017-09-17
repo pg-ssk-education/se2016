@@ -1,13 +1,13 @@
 <?php
 	echo $this->Html->css('CMN1000');
 	echo $this->Html->script('CMN1000.js');
-	
+
 	// ログインを3回失敗するとログイン画面を1分間ロックする
-	if (!empty($failures) && $failures[0]['FAILURE_COUNT'] >= 3 && $failures[0]['IS_LOCKED']){
+	if (isset($invalidAccessCount) && $invalidAccessCount >= 3) {
 		return;
 	}
 
-	echo $this->Form->create(false, array('controller'=>'CMN1000', 'action'=>'login'));
+	echo $this->Form->create(false, ['url'=>['controller'=>'CMN1000', 'action'=>'login']]);
 ?>
 <div class="CMN1000-page-content">
 	<div class="page-block table-border">
@@ -17,7 +17,8 @@
 					ログインID
 				</th>
 				<td>
-					<input type="text" class="text-loginId" name="txtLoginId" id="user_id" maxlength="32">
+					<?php echo $this->Form->input('txtLoginId', ['type'=>'text', 'maxlength'=>32, 'label'=>false]); ?>
+					<!--<input type="text" class="text-loginId" name="txtLoginId" id="user_id" maxlength="32">-->
 				</td>
 			</tr>
 			<tr>
@@ -25,14 +26,15 @@
 					パスワード
 				</th>
 				<td>
-					<input type="password" class="text-password" name="txtPassword" id="password" maxlength="32">
+					<?php echo $this->Form->input('txtPassword', ['type'=>'password', 'maxlength'=>32, 'label'=>false]); ?>
+					<!--<input type="password" class="text-password" name="txtPassword" id="password" maxlength="32">-->
 				</td>
 			</tr>
 		</table>
 	</div>
-	<?php echo $this->Html->link('パスワード再設定', '../CMN1020/index/'); ?>
+	<?php echo $this->Html->link('パスワード再設定', ['controller'=>'CMN1020', 'action'=>'index']); ?>
 	<div class="page-block">
-		<?php echo $this->Form->submit('ログイン', array('name' => 'login')); ?>
+		<?php echo $this->Form->submit('ログイン'); ?>
 	</div>
 	<hr>
 	<div class="page-block">
