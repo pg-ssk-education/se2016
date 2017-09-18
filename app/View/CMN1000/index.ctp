@@ -36,6 +36,7 @@
 	<div class="page-block">
 		<?php echo $this->Form->submit('ログイン'); ?>
 	</div>
+	<?php if(isset($norifications)): ?>
 	<hr>
 	<div class="page-block">
 		<div class="table-simple" name="lstInfo">
@@ -63,5 +64,6 @@
 			</table>
 		</div>
 	</div>
+<?php endif; ?>
 </div>
 <?php echo $this->Form->end(); ?>

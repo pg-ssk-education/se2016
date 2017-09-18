@@ -81,10 +81,10 @@ class DATABASE_CONFIG {
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'user',
-		'password' => 'password',
-		'database' => 'test_database_name',
-		'prefix' => '',
+		'login' => 'education',
+		'password' => 'education',
+		'database' => 'education',
+		'prefix' => 'se2016test_',
 		//'encoding' => 'utf8',
 	);
 }
