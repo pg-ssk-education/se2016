@@ -1,4 +1,6 @@
 <?php
+App::import('Controller', 'CMN1000');
+
 App::uses('AppController', 'Controller');
 App::uses('CMN1000Controller', 'Controller');
 App::uses('Fabricate', 'Fabricate.Lib');
@@ -6,22 +8,22 @@ App::uses('Fabricate', 'Fabricate.Lib');
 class CMN1000ControllerTest extends ControllerTestCase {
 
 	public $fixtures = [
-		'app.user',
+		'app.CMN1000Controller/User',
 		'app.CMN1000Controller/Notification',
 		'app.CMN1000Controller/InvalidAccess'
 	];
 
 	public function setUp() {
 		parent::setUp();
+		CakeSession::delete('loginUserId');
 	}
 
 	public function tearDown() {
+		CakeSession::delete('loginUserId');
 	}
 
 	public function test_indexは未ログインの場合にログイン画面を表示すること() {
 		// [準備]
-		// 未ログインに設定
-		CakeSession::delete('loginUserId');
 
 		// [実行]
 		$vars = $this->testAction('/CMN1000/index', ['method'=>'get', 'return'=>'vars']);
@@ -44,8 +46,6 @@ class CMN1000ControllerTest extends ControllerTestCase {
 
 	public function test_indexはviewにグローバルな通知情報を渡すこと() {
 		// [準備]
-		// 未ログインに設定
-		CakeSession::delete('loginUserId');
 
 		// [実行]
 		$vars = $this->testAction('/CMN1000/index', ['method'=>'get', 'return'=>'vars']);
@@ -59,18 +59,14 @@ class CMN1000ControllerTest extends ControllerTestCase {
 
 	public function test_indexはviewにクライアントIPの直近1分間の不正アクセス回数を渡すこと() {
 		// [準備]
-		// 未ログインに設定
-		CakeSession::delete('loginUserId');
-		//
+		// クライアントIPを設定
 		$CMN1000 = $this->generate('CMN1000', [
-			'models'=>[
-				'InvalidAccess'=>[
-					'findCountByClientIpOnLastOneMinute'
-				]
+			'methods'=>[
+				'getClientIp'
 			]
 		]);
-		$CMN1000->InvalidAccess->expects($this->once())->
-			method('findCountByClientIpOnLastOneMinute')->will($this->returnValue(2));
+		$CMN1000->expects($this->any())->
+			method('getClientIp')->will($this->returnValue('1.2.3.4'));
 
 		// [実行]
 		$vars = $this->testAction('/CMN1000/index', ['method'=>'get', 'return'=>'vars']);
@@ -81,8 +77,6 @@ class CMN1000ControllerTest extends ControllerTestCase {
 
 	public function test_loginはgetの場合にindexに遷移すること() {
 		// [準備]
-		// 未ログインに設定
-		CakeSession::delete('loginUserId');
 
 		// [実行]
 		$this->testAction('/CMN1000/login', ['method'=>'get']);
@@ -93,46 +87,55 @@ class CMN1000ControllerTest extends ControllerTestCase {
 		$this->assertRegExp('/^(?!.*(CMN)).+/', $this->headers['Location']);
 	}
 
-/*
+	public function test_loginはログイン成功の場合にトップ画面に遷移すること() {
+		// [準備]
+		// クライアントIPを設定
+		$CMN1000 = $this->generate('CMN1000', [
+			'methods'=>[
+				'getClientIp'
+			]
+		]);
+		$CMN1000->expects($this->any())->
+			method('getClientIp')->will($this->returnValue('1.2.3.4'));
 
+		// [実行]
+		$data = [
+			'txtLoginId'=>'testuser',
+			'txtPassword'=>'password'
+		];
+		$this->testAction('/CMN1000/login', ['method'=>'post', 'data'=>$data]);
 
-	public function testインフォーメーションを取得できること() {
-		// Viewに渡された変数を確認する
-		$result = $this->testAction('CMN1000/index', ['return' => 'vars']);
-		$notification = $result['notifications'];
-
-		// (デバッグ用)変数の内容を参照する。
-		// ※test.phpでテストケースを実行後、[Enable Debug Output]リンクから確認できる
-		var_dump($notification);
-
-		$this->assertNotEmpty($notification);
-		$this->assertCount(3, $notification);
-
-		// ROW_NUMの昇順であることを確認する
-		$this->assertEquals('1', $notification[0]['Notification']['ROW_NUM']);
-		$this->assertEquals('2', $notification[1]['Notification']['ROW_NUM']);
-		$this->assertEquals('3', $notification[2]['Notification']['ROW_NUM']);
+		// [確認]
+		$this->assertContains('/CMN1010', $this->headers['Location']);
 	}
 
-	public function login_ログイン成功の場合はトップ画面に遷移すること() {
-		//TODO:ログイン可能ユーザの登録処理
+	public function test_loginはログイン失敗の場合に不正アクセスを追加し失敗メッセージを設定しindexに遷移すること() {
+		// [準備]
+		$CMN1000 = $this->generate('CMN1000', [
+			'methods'=>[
+				'getClientIp'
+			],
+			'models'=>[
+				'InvalidAccess'=>[
+					'saveClientIp'
+				]
+			]
+		]);
+		// クライアントIPを設定
+		$CMN1000->expects($this->any())->
+			method('getClientIp')->will($this->returnValue('192.168.0.10'));
+		// InvalidAccess->saveClientIp()の呼び出し期待回数を1回に設定
+		$CMN1000->InvalidAccess->expects($this->exactly(1))->method('saveClientIp');
+
+		// [実行]
 		$data = [
-			'txtLoginId'=>'admin',
-			'txtPassword'=>'admin'
+			'txtLoginId'=>'testuser',
+			'txtPassword'=>'invalid'
 		];
 		$this->testAction('/CMN1000/login', ['data'=>$data, 'method'=>'post', 'return'=>'contents']);
-		$this->assertRegExp('/CMN1010/index', $this->headers['Location']);
-	}
 
-	public function login_ログイン失敗の場合は不正アクセスを追加し失敗メッセージを設定しindexに遷移すること() {
-		$data = [
-			'txtLoginId'=>'test',
-			'txtPassword'=>'test'
-		];
-		$this->testAction('/CMN1000/login', ['data'=>$data, 'method'=>'post', 'return'=>'contents']);
-		$this->assertRegExp('/CMN1000/index', $this->headers['Location']);
-		$this->assertContains('ログインできません。ユーザＩＤ、パスワードを確認してください。(ERR_CMN1000_01)', $this->controller->Session->read('Message.flash'));
-		//TODO:不正アクセスの追加確認
+		// [確認]
+		$this->assertRegExp('/^(?!.*(CMN)).+/', $this->headers['Location']);
+		$this->assertContains('ログインできません。ユーザＩＤ、パスワードを確認してください。(ERR_CMN1000_01)', CakeSession::read('Message.flash'));
 	}
-*/
 }

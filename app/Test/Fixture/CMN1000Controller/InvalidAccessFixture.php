@@ -2,7 +2,6 @@
 class InvalidAccessFixture extends CakeTestFixture {
 	public $connection = 'test';
 	public $import = ['model'=>'InvalidAccess'];
-	public $records = [];
 
 	public function init() {
 		$this->records = [

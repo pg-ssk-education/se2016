@@ -28,6 +28,7 @@ class CMN1000Controller extends AppController {
 				$this->Session->setFlash(
 					'ログインできません。ユーザＩＤ、パスワードを確認してください。(ERR_CMN1000_01)');
 				$this->redirect(['controller'=>'CMN1000', 'action'=>'index']);
+				return;
 			}
 
 			$this->InvalidAccess->deleteAll(
@@ -37,13 +38,13 @@ class CMN1000Controller extends AppController {
 			$this->Session->write('loginUserId', $this->request->data('txtLoginId'));
 
 			$this->redirect(['controller'=>'CMN1010', 'action'=>'index']);
+			return;
 		}
-		
+
 		$this->redirect(['controller'=>'CMN1000', 'action'=>'index']);
 	}
 
 	public function getClientIp() {
-		return '1.2.3.4';
 		return $this->request->clientIp(false);
 	}
 }
