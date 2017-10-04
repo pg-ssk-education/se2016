@@ -1,8 +1,16 @@
+<?php
+echo $this->Form->create(false,['controller'=>'CMN2020','action'=>'action']);
+echo $this->Html->script('CMN2020.js',['inline'=>false]);
+?>
+
 <div class="page-content">
   <div class="container">
-    <input type="button" id="btnAdd"   name="btnAdd"   value="追加">
-    <input type="button" id="btnEdit"   name="btnEdit"   value="編集">
-    <input type="button" id="btnDelete"   name="btnDelete"   value="削除">
+    <?php
+     echo $this->Form->button('追加', ['name'=>'btnAdd']);
+     echo $this->Form->button('編集', ['name'=>'btnEdit']);
+     echo $this->Form->button('削除', ['name'=>'btnDelete']);
+     echo $this->Form->hidden('hidAction');
+    ?>
   </div>
   <hr>
   <div class="container">
@@ -30,25 +38,26 @@
       <div class="table-simple-body table-simple-body-design">
         <table>
           <tbody>
-          <?php foreach ($wfRoutes as $wfRoute): ?>
+          <?php for($i=0;$i<count($wfRoutes);$i++): ?>
             <tr>
               <td class="col-select">
-                <input type="checkbox" id="selected[0]" name="selected[0]" value=0>
+                <?php echo $this->Form->input("selected[$i]", ['type' => 'checkbox', 'label' => '']);?>
               </td>
               <td class="col-wf-route-id">
-                <?php echo h($wfRoute['WfRoute']['WF_ROUTE_ID']);?>
+                <?php echo h($wfRoutes[$i]['WfRoute']['WF_ROUTE_ID']);?>
               </td>
               <td class="col-wf-route-name">
-                <?php echo h($wfRoute['WfRoute']['WF_ROUTE_NAME']);?>
+                <?php echo h($wfRoutes[$i]['WfRoute']['WF_ROUTE_NAME']);?>
               </td>
               <td class="col-route">
-                <?php echo h($wfRouteTable[$wfRoute['WfRoute']['WF_ROUTE_ID']]);?>
+                <?php echo h($wfRoutes[$i]['WfRoute']['APPROVAL_USER_NAME_LIST']]);?>
               </td>
             </tr>
-           <?php endforeach; ?>
+           <?php endfor; ?>
           </tbody>
         </table>
       </div>
     </td></tr></table>
   </div>
 </div>
+<?php echo $this->Form->end(); ?>

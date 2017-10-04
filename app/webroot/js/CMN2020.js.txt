@@ -1,0 +1,14 @@
+$("btnAdd").click(function(){
+	$("#hidAction").val("btnAdd");
+	return true;
+});
+
+$("btnEdit").click(function(){
+	$("#hidAction").val("btnEdit");
+	return true;
+});
+
+$("btnDelete").click(function(){
+	$("#hidAction").val("btnDelete");
+	return true;
+});

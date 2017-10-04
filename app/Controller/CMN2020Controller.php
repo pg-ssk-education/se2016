@@ -19,4 +19,7 @@ class CMN2020Controller extends AppController {
 		$this->set('wfRouteTable',$wfRouteTable);
 
 	}
+	
+	function action() {
+	}
 }
