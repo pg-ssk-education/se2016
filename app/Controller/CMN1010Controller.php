@@ -1,6 +1,7 @@
 <?php
 class CMN1010Controller extends AppController {
 	public $helpers = ['Html', 'Form'];
+	//public $helpers = array('Ajax','Javascript');
 	
 	// 使用するモデル
 	//public $uses = array();
@@ -25,24 +26,30 @@ class CMN1010Controller extends AppController {
 	}
 	
 	public function action() {
-	
-		switch ($this->request->data('hidAction') {
+		if ($this->request->data('hidAction') == 'reload') {
+			$this->reload();
+			return;
+		}
+		/*
+		switch ($this->request->data('hidAction')) {
 			case "reload":
-				reload();
+				$this->reload();
 				break;
 			
 			case "confirm":
-				confirm();
+				$this->confirm();
 				break;
 			
 			default:
 				//404エラーページに飛ばす
-	
+		}
+		*/
 	}
 	
 	
 	public function reload() {
 		
+		$this->render('index');
 		
 		
 	
@@ -51,6 +58,7 @@ class CMN1010Controller extends AppController {
 	
 	public function confirm() {
 	
+		$this->render('index');
 	
 	}
 	
