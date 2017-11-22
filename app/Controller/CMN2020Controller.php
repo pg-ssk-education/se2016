@@ -10,7 +10,7 @@ class CMN2020Controller extends AppController {
 		$wfRoutes=$this->WfRoute->findAll();
 		foreach ($wfRoutes as $wfRoute) {
 			$users=[];
-			$wfRouteSteps=$this->wfRouteStep->findAllByWfRouteId($wfRoute['WfRoute']['WF_ROUTE_ID']);
+			$wfRouteSteps=$this->WfRouteStep->findAllByWfRouteId($wfRoute['WfRoute']['WF_ROUTE_ID']);
 
 			foreach ($wfRouteSteps as $wfRouteStep) {
 				$user=$this->User->findByUserId($wfRouteStep['WfRouteStep']['APPROVAL_USER_ID']);
