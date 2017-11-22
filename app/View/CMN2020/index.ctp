@@ -50,7 +50,7 @@ echo $this->Html->script('CMN2020.js',['inline'=>false]);
                 <?php echo h($wfRoutes[$i]['WfRoute']['WF_ROUTE_NAME']);?>
               </td>
               <td class="col-route">
-                <?php echo h($wfRoutes[$i]['WfRoute']['APPROVAL_USER_NAME_LIST']]);?>
+                <?php echo h($wfRoutes[$i]['WfRoute']['APPROVAL_USER_NAME_LIST']);?>
               </td>
             </tr>
            <?php endfor; ?>
