@@ -3,7 +3,7 @@ class CMN2020Controller extends AppController {
 	public $helpers = ['Html', 'Form'];
 	
 	// 使用するモデル
-	public $uses = ['WfRoute'];
+	public $uses = ['WfRoute', 'WfRouteStep', 'User'];
 
 	function index(){
 		$wfRouteTable=[];
