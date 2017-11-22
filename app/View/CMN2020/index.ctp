@@ -47,7 +47,7 @@ echo $this->Html->script('CMN2020.js',['inline'=>false]);
                 <?php echo h($wfRouteRow['Route'][['WfRoute']['WF_ROUTE_ID']]);?>
               </td>
               <td class="col-wf-route-name">
-                <?php echo h($wfRouteRow['Route'][['WfRoute']['WF_ROUTE_NAME']);?>
+                <?php echo h($wfRouteRow['Route'][['WfRoute']['WF_ROUTE_NAME']]);?>
               </td>
               <td class="col-route">
                 <?php echo h($wfRouteRow['ApprovalUserNames']);?>
