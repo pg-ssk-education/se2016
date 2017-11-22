@@ -53,7 +53,7 @@ echo $this->Html->script('CMN2020.js',['inline'=>false]);
                 <?php echo h($wfRouteRow['ApprovalUserNames']);?>
               </td>
             </tr>
-           <?php endfor; ?>
+           <?php endforeach; ?>
           </tbody>
         </table>
       </div>
