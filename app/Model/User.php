@@ -23,4 +23,10 @@ class User extends AppModel {
 		$this->log($this->getDataSource()->getLog(), LOG_INFO);
 		return $return;
 	}
+	
+	public function findByUserId($userId){
+		return $this->find('first', [
+			'conditions' => ['User.USER_ID' => $userId]
+		]);
+	}
 }

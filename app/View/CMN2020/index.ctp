@@ -38,19 +38,19 @@ echo $this->Html->script('CMN2020.js',['inline'=>false]);
       <div class="table-simple-body table-simple-body-design">
         <table>
           <tbody>
-          <?php for($i=0;$i<count($wfRoutes);$i++): ?>
+          <?php foreach($wfRouteTable as $wfRouteRow): ?>
             <tr>
               <td class="col-select">
                 <?php echo $this->Form->input("selected[$i]", ['type' => 'checkbox', 'label' => '']);?>
               </td>
               <td class="col-wf-route-id">
-                <?php echo h($wfRoutes[$i]['WfRoute']['WF_ROUTE_ID']);?>
+                <?php echo h($wfRouteRow['Route'][['WfRoute']['WF_ROUTE_ID']]);?>
               </td>
               <td class="col-wf-route-name">
-                <?php echo h($wfRoutes[$i]['WfRoute']['WF_ROUTE_NAME']);?>
+                <?php echo h($wfRouteRow['Route'][['WfRoute']['WF_ROUTE_NAME']);?>
               </td>
               <td class="col-route">
-                <?php echo h($wfRoutes[$i]['WfRoute']['APPROVAL_USER_NAME_LIST']);?>
+                <?php echo h($wfRouteRow['ApprovalUserNames']);?>
               </td>
             </tr>
            <?php endfor; ?>

@@ -6,18 +6,23 @@ class CMN2020Controller extends AppController {
 	public $uses = ['WfRoute'];
 
 	function index(){
-		$wfRoutes=$this->WfRoute->getWfRoute();
-		$wfRouteTable=array();
-		$this->set('wfRoutes',$wfRoutes);
-		foreach ($wfRoutes as $wfRoute):
-			if(array_key_exists($wfRoute['WfRoute']['WF_ROUTE_ID'],$wfRouteTable)==false){
-				$wfRouteTable[$wfRoute['WfRoute']['WF_ROUTE_ID']]=$wfRoute['WfRoute']['APPROVAL_USER_ID'];
-			}else{
-				$wfRouteTable[$wfRoute['WfRoute']['WF_ROUTE_ID']].=$wfRoute['WfRoute']['APPROVAL_USER_ID'];
-			}
-		endforeach;
-		$this->set('wfRouteTable',$wfRouteTable);
+		$wfRouteTable=[];
+		$wfRoutes=$this->WfRoute->findAll();
+		foreach ($wfRoutes as $wfRoute) {
+			$users=[];
+			$wfRouteSteps=$this->wfRouteStep->findAllByWfRouteId($wfRoute['WfRoute']['WF_ROUTE_ID']);
 
+			foreach ($wfRouteSteps as $wfRouteStep) {
+				$user=$this->User->findByUserId($wfRouteStep['WfRouteStep']['APPROVAL_USER_ID']);
+				array_push($users, $user['User']['NAME']);
+			}
+
+			array_push($wfRouteTable, [
+				'Route'=>$wfRoute,
+				'ApprovalUserNames'=>implode(', ', $users)
+			]);
+		}
+		$this->set('wfRouteTable', $wfRouteTable);
 	}
 	
 	function action() {
