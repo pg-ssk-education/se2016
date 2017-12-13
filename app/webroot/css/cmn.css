@@ -1,0 +1,218 @@
+body {
+	margin           :0    ;
+	padding          :0    ;
+	background-color :white;
+	overflow         :auto ;
+}
+
+* {
+	margin       :0    ;
+	padding      :0    ;
+	font-size    :12px ;
+}
+
+hr {
+	border-style    :solid        ;
+	border-width    :0 1px 1px 1px;
+	border-color    :black        ;
+	background-color:black        ;
+	height          :0            ;
+}
+
+table, tr, th, td {
+	border-collapse :collapse;
+	border-style    :solic   ;
+	border-width    :0       ;
+	vertical-align  :middle  ;
+	table-layout    :fixed   ;
+}
+
+th {
+	text-align   :center;
+	font-weight  :bold  ;
+}
+
+td {
+	text-align   :center;
+}
+
+input[type=text] {
+	margin  :0   ;
+	padding :2px ;
+	height  :17px;
+}
+
+input[type=password] {
+	margin   :0   ;
+	padding  :2px ;
+	height   :17px;
+	font-size:10px;
+}
+
+input[type=button],input[type=submit],button {
+	margin   :0    ;
+	padding  :5px  ;
+	width    :100px;
+}
+
+input[type=checkbox] {
+	margin-right :2px;
+}
+
+select {
+	margin    :0    ;
+	padding   :5px  ;
+	min-width :100px;
+}
+
+
+div.page-header {
+	position           :fixed;
+	top                :0    ;
+	left               :0    ;
+	height             :40px ;
+	width              :100% ;
+	z-index            :1000 ;
+	border-style       :solid;
+	border-width       :0 0 1px 0;
+}
+
+div.page-header div.menu {
+	position  :absolute;
+	top       :0       ;
+	left      :5px     ;
+	height    :100%    ;
+}
+
+div.page-header div.menu table {
+	height :100%;
+}
+
+div.page-header div.logout {
+	position  :absolute;
+	top       :0       ;
+	right     :5px     ;
+	height    :100%    ;
+}
+
+div.page-header div.logout table {
+	height :100%;
+}
+
+div.page-footer {
+	position :fixed;
+	bottom   :0    ;
+	left     :0    ;
+	height   :20px ;
+	width    :100% ;
+	z-index  :1000 ;
+}
+
+div.page-footer table {
+	text-align  :center;
+	width       :100%;
+	height      :100%;
+}
+
+div.page-content {
+	position      :relative;
+	margin-top    :45px    ;
+	margin-bottom :25px    ;
+	padding       :0       ;
+}
+
+div.page-block {
+	margin :5px;
+}
+
+td.col-text, input[type=text].col-text {
+
+}
+
+.col-text {
+	text-align  :left;
+}
+
+.col-code {
+    text-align  :left;
+}
+
+.col-numeric {
+	text-align  :right;
+}
+
+.col-mark {
+	text-align  :center;
+}
+
+div.panel div:first-child {
+	position         :absolute;
+	background-color :inherit;
+    top              :-6px;
+    left             :5px;
+    padding-left     :5px;
+    padding-right    :5px;
+}
+
+div.table-simple thead {
+	overflow   :hidden;
+	display    :block;
+}
+
+div.table-simple tbody {
+	overflow   :scroll;
+	display    :block;
+}
+
+div.table-simple thead th, div.table-simple thead td {
+	height       :15px         ;
+	padding      :5px          ;
+	border-style :solid        ;
+	border-width :1px 1px 0 1px;
+}
+
+div.table-simple tbody th, div.table-simple tbody td {
+	min-height   :15px ;
+	padding      :5px  ;
+	border-style :solid;
+	border-width :1px  ;
+}
+
+
+
+
+
+
+div.table-border td, div.table-border th {
+	min-height   :15px ;
+	padding      :5px  ;
+	border-style :solid;
+	border-width :1px  ;
+}
+
+
+
+
+
+div.table-left-header, div.table-right-header, div.tableleft-body {
+	over-flow  :hidden;
+}
+
+div.table-left-header thead th, div.table-right-header thead th {
+	border-bottom  :none;
+	background-color  :#A0E0B0
+}
+
+div.table-right-body {
+	over-flow  :scroll;
+}
+
+
+
+input.text-loginId {
+	width: 200px;
+}
+
+input.text-password {
+	width: 200px;
+}
