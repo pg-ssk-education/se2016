@@ -9,6 +9,7 @@ $("btnEdit").click(function(){
 });
 
 $("btnDelete").click(function(){
+alert();
   $("#hidAction").val("Delete");
   return true;
 });

@@ -1,6 +1,6 @@
 <?php
+  echo $this->Html->script('CMN2000.js',['inline'=>true]);
   echo $this->Form->create(false,['controller'=>'CMN2000','action'=>'action']);
-  echo $this->Html->script('CMN2000.js',['inline'=>false]);
 ?>
 <div class="page-content">
   <div class="container">
@@ -45,7 +45,7 @@
                 <?php foreach($users as $user): ?>
                   <tr>
                     <td class="col-select">
-                      <input type="checkbox" id="<?php echo h($user['User']['USER_ID']); ?>" />
+                      <input type="checkbox" name="check[]" value="<?php echo h($user['User']['USER_ID']); ?>" />
                     </td>
                     <td class="col-user-id">
                       <?php echo h($user['User']['USER_ID']); ?>

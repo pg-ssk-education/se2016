@@ -6,26 +6,26 @@ class CMN2000Controller extends AppController {
 	public $uses = ['User'];
 
 	public function index() {
-		$users=$this->User->findAll(['order' => ['User.USER_ID' => 'asc']]);
+		$users=$this->User->findAll();
 		$this->set('users', $users);
 	}
 	
 	public function action() {
-    switch($this->response->data('hidAction')) {
-      case "Add":
-        add();
-        break;
-      case "Edit":
-        edit();
-        break;
-      case "Delete":
-        delete();
-        break;
-      default:
-        Throw new NotFoundeException();
-        break;
-    }
-	  return false;
+		switch($this->request->data('hidAction')) {
+			case "Add":
+				add();
+				break;
+			case "Edit":
+				edit();
+				break;
+			case "Delete":
+				delete();
+				break;
+			default:
+				Throw new NotFoundeException();
+				break;
+		}
+		return false;
 	}
 	
 	public function add() {
@@ -35,5 +35,13 @@ class CMN2000Controller extends AppController {
 	}
 	
 	public function delete() {
+		if (isset($_POST['check'])) {
+			$checks = $_POST['check'];
+			
+			foreach ($checks as $check) {
+				$flg=$this->User->deleteByUserId($check);
+			}
+		}
+		
 	}
 }
