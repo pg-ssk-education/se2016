@@ -1,7 +1,6 @@
 <?php
-	echo $this->Html->css('CMN1000');
 	echo $this->Html->script('CMN1000.js');
-
+	
 	// ログインを3回失敗するとログイン画面を1分間ロックする
 	if (isset($invalidAccessCount) && $invalidAccessCount >= 3) {
 		return;
@@ -36,34 +35,31 @@
 	<div class="page-block">
 		<?php echo $this->Form->submit('ログイン'); ?>
 	</div>
-	<?php if(isset($norifications)): ?>
-	<hr>
-	<div class="page-block">
-		<div class="table-simple" name="lstInfo">
-			<table>
-				<thead>
-					<tr>
-						<th>
-							<div class="CMN1000-col-info">
-								インフォメーション
-							</div>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ($notifications as $notification) { ?>
-					<tr>
-						<td>
-							<div class="CMN1000-col-info col-text">
-								<?php echo h($notification['Notification']['COMMENT']); ?>
-							</div>
-						</td>
-					</tr>
-					<?php } ?>
-				</tbody>
-			</table>
+	<?php if(isset($notifications)): ?>
+		<hr>
+		<table id="notifications" class="table table-bordered">
+			<thead>
+				<tr>
+					<th>
+						インフォメーション
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($notifications as $notification) { ?>
+				<tr>
+					<td class="col-text">
+						<?php echo h($notification['Notification']['COMMENT']); ?>
+					</td>
+				</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+		
+		<div class="page-block">
+			<div class="table-simple" name="lstInfo">
+			</div>
 		</div>
-	</div>
-<?php endif; ?>
+	<?php endif; ?>
 </div>
 <?php echo $this->Form->end(); ?>
