@@ -5,9 +5,9 @@
 <div class="page-content">
   <div class="container">
     <?php
-      echo $this->Form->button('追加', ['name'=>'btnAdd']);
-      echo $this->Form->button('編集', ['name'=>'btnEdit']);
-      echo $this->Form->button('削除', ['name'=>'btnDelete']);
+      echo $this->Form->button('追加', ['id'=>'btnAdd']);
+      echo $this->Form->button('編集', ['id'=>'btnEdit']);
+      echo $this->Form->button('削除', ['id'=>'btnDelete']);
       echo $this->Form->hidden('hidAction');
     ?>
   </div>
@@ -45,7 +45,7 @@
                 <?php foreach($users as $user): ?>
                   <tr>
                     <td class="col-select">
-                      <input type="checkbox" name="check[]" value="<?php echo h($user['User']['USER_ID']); ?>" />
+                      <input type="checkbox" name="check[0]" value="<?php echo h($user['User']['USER_ID']); ?>" />
                     </td>
                     <td class="col-user-id">
                       <?php echo h($user['User']['USER_ID']); ?>

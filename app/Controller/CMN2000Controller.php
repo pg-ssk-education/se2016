@@ -19,7 +19,7 @@ class CMN2000Controller extends AppController {
 				edit();
 				break;
 			case "Delete":
-				delete();
+				$this->delete();
 				break;
 			default:
 				Throw new NotFoundeException();
@@ -39,9 +39,10 @@ class CMN2000Controller extends AppController {
 			$checks = $_POST['check'];
 			
 			foreach ($checks as $check) {
-				$flg=$this->User->deleteByUserId($check);
+				$flg=$this->User->delete($check);
 			}
 		}
 		
+		$this->redirect(['controller'=>'CMN2000', 'action'=>'index']);
 	}
 }

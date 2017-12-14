@@ -35,9 +35,4 @@ class User extends AppModel {
 			'conditions' => ['User.USER_ID' => $userId]
 		]);
 	}
-
-	public function deleteByUserId($userId) {
-		return $this->User->delete($userId);
-		// return $this->User->deleteAll(['$userId' => $userId]);
-	}
 }
