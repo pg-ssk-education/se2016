@@ -1,9 +1,9 @@
+$(function() {
+	$("#reload").click(function() {
+		$("#hidAction").val("reload");
+		$("#indexForm").submit();
+		
+		return true;
 
-$("reload").click(function() {
-alert();
-	$("#hidAction").val("reload");
-	$("#indexForm").submit();
-	
-	return true;
-
+	});
 });

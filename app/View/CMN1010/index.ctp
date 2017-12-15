@@ -1,12 +1,11 @@
 <?php
 	
-	echo $this->Form->create(false, ['controller'=>'CMN1010', 'action'=>'action']);
 	//echo $this->Form->create(false, ['url' => ['controller'=>'CMN1010', 'action'=>'action']]);
-	echo $this->Html->script('CMN1010.js', ['inline' => false]);
-
+	echo $this->Html->script('CMN1010.js');
+	echo $this->Form->create(false, ['controller'=>'CMN1010', 'action'=>'action']);
 ?>
 
-<div class="page-content" style="font-size:14pt; padding-left:10px"><?php echo $loginUserName ?>
+<div class="page-content" style="font-size:14pt; padding-left:10px">
 	<br><br>
 	申請書一覧
 	<br><br>
@@ -16,12 +15,12 @@
 			
 			<?php 
 			
-			echo $this->Form->input('class1', array('type' => 'checkbox', 'label' => '情報'));
-			echo $this->Form->input('class2', array('type' => 'checkbox', 'label' => '注意'));
-			echo $this->Form->input('class3', array('type' => 'checkbox', 'label' => '警告'));
-			echo $this->Form->input('class4', array('type' => 'checkbox', 'label' => '確認済み'));
+			echo $this->Form->input('infoChkbox', array('type' => 'checkbox', 'label' => '情報'));
+			echo $this->Form->input('warnChkbox', array('type' => 'checkbox', 'label' => '警告'));
+			echo $this->Form->input('alertChkbox', array('type' => 'checkbox', 'label' => 'エラー'));
+			echo $this->Form->input('confChkbox', array('type' => 'checkbox', 'label' => '確認済み'));
 			
-			echo $this->Form->submit('再表示', array('name' => 'reload'));
+			echo $this->Form->submit('再表示', array('id' => 'reload'));
 			//echo $this->Form->button('再表示', ['name' => 'reload', 'type' => 'button']);
 			echo $this->Form->hidden('hidAction');
 			
