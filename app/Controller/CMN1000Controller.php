@@ -6,10 +6,10 @@ class CMN1000Controller extends AppController {
 	public function index() {
 		// すでにログイン済みの場合はトップページへ遷移
 		if ($this->logined()) {
-			$this->redirect(['controller'=>'CMN1010', 'action'=>'index']);
+//			$this->redirect(['controller'=>'CMN1010', 'action'=>'index']);
 		}
 
-		$this->set('title', 'ログイン');
+		$this->set('title_for_layout', 'ログイン');
 		$this->set('notifications',
 			$this->Notification->findAllByTargetUserId('', null, ['Notification.UPD_DATETIME' => 'desc']));
 		$this->set('invalidAccessCount',

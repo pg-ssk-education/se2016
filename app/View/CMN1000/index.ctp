@@ -1,24 +1,24 @@
 <?php
-	echo $this->Html->css('CMN1000');
-	echo $this->Html->script('CMN1000.js');
+	echo $this->Html->css('CMN1000', ['inline' => false]);
+	echo $this->Html->script('CMN1000.js', ['inline' => false]);
 
 	// ログインを3回失敗するとログイン画面を1分間ロックする
 	if (isset($invalidAccessCount) && $invalidAccessCount >= 3) {
 		return;
 	}
 
-	echo $this->Form->create(false, ['url'=>['controller'=>'CMN1000', 'action'=>'login']]);
+	echo $this->Form->create(false, ['url' => ['controller' => 'CMN1000', 'action' => 'login']]);
 ?>
-<div class="CMN1000-page-content">
-	<div class="page-block table-border">
-		<table>
+
+<div class="page-content">
+	<div class="row">
+		<table class="table-border">
 			<tr>
 				<th class="require">
 					ログインID
 				</th>
 				<td>
-					<?php echo $this->Form->input('txtLoginId', ['type'=>'text', 'maxlength'=>32, 'label'=>false]); ?>
-					<!--<input type="text" class="text-loginId" name="txtLoginId" id="user_id" maxlength="32">-->
+					<?php echo $this->Form->input('txtLoginId', ['type' => 'text', 'maxlength' => 32, 'label' => false]); ?>
 				</td>
 			</tr>
 			<tr>
@@ -26,44 +26,36 @@
 					パスワード
 				</th>
 				<td>
-					<?php echo $this->Form->input('txtPassword', ['type'=>'password', 'maxlength'=>32, 'label'=>false]); ?>
-					<!--<input type="password" class="text-password" name="txtPassword" id="password" maxlength="32">-->
+					<?php echo $this->Form->input('txtPassword', ['type' => 'password', 'maxlength' => 32, 'label' => false]); ?>
 				</td>
 			</tr>
 		</table>
+		<div class="page-block">
+			<?php echo $this->Form->button('ログイン', ['type' => 'submit', 'div' => false]); ?>
+			<?php echo $this->Html->link('パスワード再設定', ['class' => 'disabled', 'controller' => 'CMN1020', 'action' => 'index']); ?>
+		</div>
 	</div>
-	<?php echo $this->Html->link('パスワード再設定', ['controller'=>'CMN1020', 'action'=>'index']); ?>
-	<div class="page-block">
-		<?php echo $this->Form->submit('ログイン'); ?>
-	</div>
-	<?php if(isset($norifications)): ?>
-	<hr>
-	<div class="page-block">
-		<div class="table-simple" name="lstInfo">
-			<table>
+	<?php if(isset($notifications)): ?>
+		<div class="row">
+			<table class="table table-striped" id="notifications">
 				<thead>
 					<tr>
 						<th>
-							<div class="CMN1000-col-info">
-								インフォメーション
-							</div>
+							インフォメーション
 						</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($notifications as $notification) { ?>
-					<tr>
-						<td>
-							<div class="CMN1000-col-info col-text">
+					<?php foreach ($notifications as $notification): ?>
+						<tr>
+							<td class="col-text">
 								<?php echo h($notification['Notification']['COMMENT']); ?>
-							</div>
-						</td>
-					</tr>
-					<?php } ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
-	</div>
-<?php endif; ?>
+	<?php endif; ?>
 </div>
 <?php echo $this->Form->end(); ?>
