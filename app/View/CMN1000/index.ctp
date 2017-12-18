@@ -31,7 +31,7 @@
 			</tr>
 		</table>
 		<div class="page-block">
-			<?php echo $this->Form->button('ログイン', ['type' => 'submit', 'div' => false]); ?>
+			<?php echo $this->Form->button('ログイン', ['type' => 'submit', 'class' => 'btn btn-primary', 'div' => false]); ?>
 			<?php echo $this->Html->link('パスワード再設定', ['class' => 'disabled', 'controller' => 'CMN1020', 'action' => 'index']); ?>
 		</div>
 	</div>

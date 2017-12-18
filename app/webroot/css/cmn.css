@@ -100,6 +100,7 @@ td.col-text, input[type=text].col-text {
 	padding      :5px  ;
 	border-style :solid;
 	border-width :1px  ;
+	vertical-align:middle;
 }
 
 .table-border th {
