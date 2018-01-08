@@ -39,6 +39,14 @@ class AppController extends Controller {
 	                   'Paginator' => ['className' => 'TwitterBootstrap.BootstrapPaginator']];
 	public $layout = 'bootstrap';
 
+	public function setAlertMessage($message, $type) {
+		if ($this->Session->check('Message.alert-' . $type)) {
+			$this->Session->setFlash($this->Session->read('Message.alert-' . $type) . '<br />' . $message, 'flash_' . $type, [], 'alert-' . $type);
+		} else {
+			$this->Session->setFlash($message, 'flash_' . $type, [], 'alert-' . $type);
+		}
+	}
+
 	public function logined() {
 		if (isset($this->Session)) {
 			$loginUserId = $this->Session->read('loginUserId');

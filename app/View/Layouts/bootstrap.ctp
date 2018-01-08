@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 	<meta charset="utf-8">
 	<title>
@@ -18,33 +18,72 @@
 </head>
 
 <body>
-
-	<div class="navbar navbar-fixed-top">
+	<?php /*
+	<div class="navbar">
 		<div class="navbar-inner">
 			<div class="container">
-				<?php if ($this->Session->check('CMN1000')): ?>
-					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<?php //if ($this->Session->check('CMN1000')): ?>
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".gnavi">
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-				<?php endif; ?>
-				<h4><?php echo $this->Html->link(__('社内事務効率化ツール'), '/CMN1000/index'); ?></h4>
-				<div class="nav-collapse">
-					<?php if ($this->Session->check('CMN1000')): ?>
-						<ul class="nav">
-							<li class="active"><a href="#">Home</a></li>
-							<li><a href="#about">About</a></li>
-							<li><a href="#contact">Contact</a></li>
+				<?php //endif; ?>
+				<h4><?php echo $this->Html->link(__('社内事務効率化ツール'), '/CMN1000/index', ['class' => 'brand']); ?></h4>
+				<div class="gnavi">
+					<?php //if ($this->Session->check('CMN1000')): ?>
+						<ul class="nav navbar-right">
+							<li><a href="">Home</a></li>
+							<li><a href="">About</a></li>
+							<li><a href="">Contact</a></li>
 						</ul>
-					<?php endif; ?>
+					<?php //endif; ?>
 				</div>
 			</div>
 		</div>
 	</div>
+	*/?>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<?php /*
+			<a class="btn btn-navbar navbar-toggle collapsed" data-toggle="collapse" data-target="#gnavi">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+			*/?>
+			<h4><?php echo $this->Html->link(__('社内事務効率化ツール'), '/CMN1000/index', ['class' => 'brand', 'style' => 'margin:0 5px;']); ?></h4>
+			<ul class="nav">
+				<li><a href="">管理メニュー</a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#">menu1</a></li>
+					</ul>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav pull-right">
+				<li class="dropdown">
+					<a href="#" id="dropdown-menu-1" class="dropdown-toggle" data-toggle="dropdown" role="button">ユーザ名<span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="#">個別設定</a></li>
+						<li><a href="#">ログアウト</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
 
 	<div class="container">
-		<?php echo $this->Session->flash(); ?>
+		<?php if ($this->Session->check('Message.alert-nortice') || $this->Session->check('Message.alert-success') || $this->Session->check('Message.alert-error')): ?>
+			<section id="alerts">
+				<?php
+				echo $this->Session->flash('alert-nortice');
+				echo $this->Session->flash('alert-success');
+				echo $this->Session->flash('alert-error');
+				?>
+			</section>
+		<?php endif; ?>
 		<?php echo $this->fetch('content'); ?>
 		<div class="row">
 			<div class="page-footer">
@@ -52,13 +91,18 @@
 					&copy;CSC-Osaka Education Team
 				</div>
 			</div>
-		</div>
-	</div>
+		</div>	</div>
 
 	<!-- Le javascript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<?php echo $this->Html->script(['jquery-3.2.1.min', 'bootstrap.min', 'jquery.dataTables.min', 'cmn']); ?>
+	<?php echo $this->Html->script(['jquery-3.2.1.min', 'bootstrap', 'jquery.dataTables.min']); ?>
+	<script>
+		$(document).ready(function(){
+			$(".dropdown-toggle").dropdown();
+		});
+	</script>
+
 	<?php echo $this->fetch('script'); ?>
 
 </body>
