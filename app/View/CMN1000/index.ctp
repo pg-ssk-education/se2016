@@ -35,7 +35,7 @@ echo $this->Form->create(false, ['url' => ['controller' => 'CMN1000', 'action' =
 	<?php echo $this->Form->button('ログイン', ['type' => 'submit', 'class' => 'btn btn-primary', 'div' => false]); ?>
 	<?php //echo $this->Html->link('パスワード再設定', ['class' => 'disabled', 'controller' => 'CMN1020', 'action' => 'index']); ?>
 </div>
-<?php if(isset($notifications)): ?>
+<?php if (!empty($notifications)): ?>
 	<table class="table table-striped" id="notifications">
 		<thead>
 			<tr>
