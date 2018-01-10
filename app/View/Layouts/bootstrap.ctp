@@ -54,20 +54,19 @@
 			*/?>
 			<h4><?php echo $this->Html->link(__('社内事務効率化ツール'), '/CMN1000/index', ['class' => 'brand', 'style' => 'margin:0 5px;']); ?></h4>
 			<ul class="nav">
-				<li><a href="">管理メニュー</a></li>
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<span class="caret"></span></a>
+					<a class="dropdown-toggle" data-toggle="dropdown">メニュー<span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a href="#">menu1</a></li>
+						<li><?php echo $this->Html->link('ユーザ管理', '/CMN2000/index', []) ?></li>
 					</ul>
 				</li>
 			</ul>
-			<ul class="nav navbar-nav pull-right">
+			<ul class="nav pull-right">
 				<li class="dropdown">
-					<a href="#" id="dropdown-menu-1" class="dropdown-toggle" data-toggle="dropdown" role="button">ユーザ名<span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a href="#">個別設定</a></li>
-						<li><a href="#">ログアウト</a></li>
+					<a class="dropdown-toggle" data-toggle="dropdown">ユーザ名<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<!--<li><a href="google.co.jp">個別設定</a></li>-->
+						<li><?php echo $this->Html->link('ログアウト', '/CMN1000/index?logout=1', []) ?></li>
 					</ul>
 				</li>
 			</ul>
@@ -98,9 +97,7 @@
 	<!-- Placed at the end of the document so the pages load faster -->
 	<?php echo $this->Html->script(['jquery-3.2.1.min', 'bootstrap', 'jquery.dataTables.min']); ?>
 	<script>
-		$(document).ready(function(){
-			$(".dropdown-toggle").dropdown();
-		});
+		$(".dropdown-toggle").dropdown();
 	</script>
 
 	<?php echo $this->fetch('script'); ?>

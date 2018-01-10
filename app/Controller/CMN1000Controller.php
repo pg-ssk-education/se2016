@@ -25,10 +25,6 @@ class CMN1000Controller extends AppController {
 				$this->request->data('txtLoginId'), $this->request->data('txtPassword'));
 			if (empty($user)) {
 				$this->InvalidAccess->saveClientIp($this->getClientIp());
-				/*
-				$this->Session->setFlash(
-					'ログインできません。ユーザＩＤ、パスワードを確認してください。', 'flash_alert', [], 'alert');
-				*/
 				parent::setAlertMessage('ログインできません。ユーザＩＤ、パスワードを確認してください。', 'error');
 				$this->redirect(['controller' => 'CMN1000', 'action' => 'index']);
 				return;
