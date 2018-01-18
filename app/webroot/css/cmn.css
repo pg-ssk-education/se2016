@@ -82,3 +82,9 @@ div.page-block {
 .table-border th.require {
     background-color:#FFE0E0;
 }
+
+.dropdown-toggle {
+    cursor : pointer;
+}
+
+
