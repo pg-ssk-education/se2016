@@ -2,27 +2,11 @@
 class CMN1010Controller extends AppController {
 
 	public $helpers = ['Html', 'Form'];
-
-	// 使用するモデル
-	//public $uses = array();
 	public $uses = ['Notification'];
-	
 
 	public function index() {
-
-		if(isset($_SESSION) && isset($_SESSION['CMN1010'])) {
-			//$this->redirect(['controller'=>'CMN1000', 'action'=>'index']);
-			$sessionData = $_SESSION['CMN1010'];
-			$conditions = $sessionData['conditions'];
-			
-			if(isset($conditions) && !empty($conditions)) {
-				$this->set('notifications', $this->Notification->find('all', ['conditions' => $conditions]));
-				return;
-			}
-			//Todo:ログインユーザーを条件に入れること
-		}
-		
-		$this->set('notifications', $this->Notification->find('all', ['conditions' => ['Notification.CONFIRMED' => '0']]));
+		$userId = $this->Session->read('loginUserId');
+		$this->set('notifications', $this->Notification->findAllByUserId($userId));
 	}
 	
 	public function action() {

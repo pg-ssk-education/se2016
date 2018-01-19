@@ -10,5 +10,19 @@ class Notification extends AppModel {
     		'order' => array('Notification.ROW_NUM' => 'asc')
     	));
     }
+    
+    public function findAllByUserId($userId) {
+    	$conditions = [
+    		'Notification.TARGET_USER_ID' => $userId,
+    		'Notification.STATE'          => 0
+    	];
+    	$order = [
+    		'Notification.INS_DATETIME' => 'desc'
+    	];
+    	return $this->find('all', [
+    		'conditions' => $conditions, 
+    		'order'      => $order
+    	]);
+    }
 }
 
