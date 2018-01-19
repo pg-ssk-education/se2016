@@ -29,7 +29,7 @@ class CMN1000ControllerTest extends ControllerTestCase {
 		$vars = $this->testAction('/CMN1000/index', ['method'=>'get', 'return'=>'vars']);
 
 		// [確認]
-		$this->assertEquals('ログイン', $vars['title']);
+		$this->assertEquals('ログイン', $vars['title_for_layout']);
 	}
 
 	public function test_indexはログイン済みの場合にトップ画面に遷移すること() {
@@ -84,7 +84,7 @@ class CMN1000ControllerTest extends ControllerTestCase {
 		// [確認]
 		// デフォルトページなのでCMN1000が省略される
 		// よってCMNが含まれないかを確認する
-		$this->assertRegExp('/^(?!.*(CMN)).+/', $this->headers['Location']);
+		$this->assertRegExp('/^(?!.*(CMN1000\/index)).+/', $this->headers['Location']);
 	}
 
 	public function test_loginはログイン成功の場合にトップ画面に遷移すること() {
@@ -135,7 +135,20 @@ class CMN1000ControllerTest extends ControllerTestCase {
 		$this->testAction('/CMN1000/login', ['data'=>$data, 'method'=>'post', 'return'=>'contents']);
 
 		// [確認]
-		$this->assertRegExp('/^(?!.*(CMN)).+/', $this->headers['Location']);
-		$this->assertContains('ログインできません。ユーザＩＤ、パスワードを確認してください。(ERR_CMN1000_01)', CakeSession::read('Message.flash'));
+		$this->assertRegExp('/^(?!.*(CMN1000\/index)).+/', $this->headers['Location']);
+		$this->assertContains('ログインできません。ユーザＩＤ、パスワードを確認してください。', CakeSession::read('Message.alert-error'));
+	}
+	
+	public function test_logoutはセッションのログイン情報を削除しインデックスに遷移すること() {
+    // [準備]
+		// ログイン済みに設定
+		CakeSession::write('loginUserId', 'testuser');
+		
+		// [実行]
+		$this->testAction('/CMN1000/logout', ['method'=>'get']);
+		
+		// [確認]
+		$this->assertFalse(CakeSession::check('loginUserId'));
+		$this->assertRegExp('/^(?!.*(CMN1000\/index)).+/', $this->headers['Location']);
 	}
 }

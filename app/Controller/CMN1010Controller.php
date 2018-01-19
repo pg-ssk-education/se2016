@@ -1,11 +1,12 @@
 <?php
 class CMN1010Controller extends AppController {
-	public $helpers = array('Html', 'Form');
 
-	// 使用するモデル
-	public $uses = array();
+	public $helpers = ['Html', 'Form'];
+	public $uses = ['Notification'];
 
 	public function index() {
-		$this->set('title', 'トップ');
+		parent::checkLogin();
+		$userId = $this->Session->read('loginUserId');
+		$this->set('notifications', $this->Notification->findAllByUserId($userId));
 	}
 }
