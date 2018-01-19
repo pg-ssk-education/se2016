@@ -1,19 +1,9 @@
-$(function() {
-  $("#btnAdd").click(function(){
-  alert();
-    $("#hidAction").val("Add");
-    return true;
-  });
-
-  $("#btnEdit").click(function(){
-  alert();
-    $("#hidAction").val("Edit");
-    return true;
-  });
-
-  $("#btnDelete").click(function(){
-  alert();
-    $("#hidAction").val("Delete");
-    return true;
-  });
+$(document).ready(function() {
+	$('#users').DataTable({
+		"paging"      :true,
+		"lengthChange":true,
+		"searching"   :true,
+		"ordering"    :true,
+		"info"        :true
+	});
 });

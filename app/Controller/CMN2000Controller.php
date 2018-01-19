@@ -22,7 +22,7 @@ class CMN2000Controller extends AppController {
 				$this->delete();
 				break;
 			default:
-				Throw new NotFoundeException();
+				Throw new NotFoundException();
 				break;
 		}
 		return false;
