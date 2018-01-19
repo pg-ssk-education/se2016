@@ -56,4 +56,14 @@ class AppController extends Controller {
 		}
 		return false;
 	}
+	
+	public function checkLogin() {
+		if (isset($this->Session)) {
+			$loginUserId = $this->Session->read('loginUserId');
+			if (isset($loginUserId)) {
+				return;
+			}
+		}
+		$this->redirect(['controller'=>'CMN1000', 'action'=>'index']);
+	}
 }

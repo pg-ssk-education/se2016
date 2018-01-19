@@ -1,9 +1,9 @@
-$(function() {
-	$("#reload").click(function() {
-		$("#hidAction").val("reload");
-		$("#indexForm").submit();
-		
-		return true;
-
+$(document).ready(function() {
+	$('#notifications').DataTable({
+		"paging"      :true,
+		"lengthChange":true,
+		"searching"   :true,
+		"ordering"    :true,
+		"info"        :true
 	});
 });

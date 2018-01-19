@@ -17,7 +17,7 @@ class Notification extends AppModel {
     		'Notification.STATE'          => 0
     	];
     	$order = [
-    		'Notification.INS_DATETIME' => 'desc'
+    		'Notification.UPD_DATETIME' => 'desc'
     	];
     	return $this->find('all', [
     		'conditions' => $conditions, 
