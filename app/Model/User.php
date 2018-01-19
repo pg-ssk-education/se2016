@@ -12,6 +12,12 @@ class User extends AppModel {
 		]
 	];
 
+	public function findAll() {
+		return $this->find('all',[
+			'order' => ['User.USER_ID' => 'asc']
+		]);
+	}
+
 	public function findByUserIdAndPassword($userId, $password) {
 		$conditions = [
 			'User.USER_ID'=>$userId,
