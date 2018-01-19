@@ -5,8 +5,8 @@ class CMN1000Controller extends AppController {
 
 	public function index() {
 		// すでにログイン済みの場合はトップページへ遷移
-		if ($this->logined()) {
-//			$this->redirect(['controller'=>'CMN1010', 'action'=>'index']);
+		if ($this->Session->check('loginUserId')) {
+			$this->redirect(['controller'=>'CMN1010', 'action'=>'index']);
 		}
 
 		$this->set('title_for_layout', 'ログイン');
@@ -25,9 +25,8 @@ class CMN1000Controller extends AppController {
 				$this->request->data('txtLoginId'), $this->request->data('txtPassword'));
 			if (empty($user)) {
 				$this->InvalidAccess->saveClientIp($this->getClientIp());
-				$this->Session->setFlash(
-					'ログインできません。ユーザＩＤ、パスワードを確認してください。(ERR_CMN1000_01)');
-				$this->redirect(['controller'=>'CMN1000', 'action'=>'index']);
+				parent::setAlertMessage('ログインできません。ユーザＩＤ、パスワードを確認してください。', 'error');
+				$this->redirect(['controller' => 'CMN1000', 'action' => 'index']);
 				return;
 			}
 
@@ -37,11 +36,16 @@ class CMN1000Controller extends AppController {
 			// ログイン処理
 			$this->Session->write('loginUserId', $this->request->data('txtLoginId'));
 
-			$this->redirect(['controller'=>'CMN1010', 'action'=>'index']);
+			$this->redirect(['controller' => 'CMN1010', 'action' => 'index']);
 			return;
 		}
 
-		$this->redirect(['controller'=>'CMN1000', 'action'=>'index']);
+		$this->redirect(['controller' => 'CMN1000', 'action' => 'index']);
+	}
+	
+	public function logout() {
+    $this->Session->delete('loginUserId');
+    $this->redirect(['controller' => 'CMN1000', 'action' => 'index']);
 	}
 
 	public function getClientIp() {
