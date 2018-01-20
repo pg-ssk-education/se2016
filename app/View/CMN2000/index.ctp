@@ -4,12 +4,9 @@
 ?>
 <div class="page-content">
 	<div class="page-block">
-		<?php
-			echo $this->Form->button('追加', ['id'=>'btnAdd']);
-			echo $this->Form->button('編集', ['id'=>'btnEdit']);
-			echo $this->Form->button('削除', ['id'=>'btnDelete']);
-			echo $this->Form->hidden('hidAction');
-		?>
+		<div class="btn-group">
+			<?php echo $this->Html->link('追加', ['controller'=>'CMN2000', 'action'=>'edit', 'id'=>''], ['class'=>'btn']); ?>
+		</div>
 	</div>
 	<div class="page-block">
 		<table id="users" class="table table-striped">
@@ -37,10 +34,10 @@
 						</td>
 						<td>
 							<div class="btn-group">
-								<?php
-								echo $this->Html->link('編集', ['controller'=>'CMN2000', 'action'=>'edit?id='.h($user['User']['USER_ID'])], ['class'=>'btn']);
-								echo $this->Html->link('削除', ['controller'=>'CMN2000', 'action'=>'delete?id='.h($user['User']['USER_ID'])], ['class'=>'btn']);
-								?>
+								<?php echo $this->Html->link('編集', ['controller'=>'CMN2000', 'action'=>'edit', 'id'=>$user['User']['USER_ID']], ['class'=>'btn']); ?>
+							</div>
+							<div class="btn-group">
+								<?php echo $this->Html->link('削除', ['controller'=>'CMN2000', 'action'=>'delete', 'id'=>$user['User']['USER_ID']], ['class'=>'btn'], $user['User']['NAME'].'を削除します。よろしいですか？'); ?>
 							</div>
 						</td>
 					</tr>

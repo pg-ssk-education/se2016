@@ -6,43 +6,33 @@ class CMN2000Controller extends AppController {
 	public $uses = ['User'];
 
 	public function index() {
+		parent::checkLogin();
+		$this->set('title_for_layout', 'ユーザ管理');
 		$users=$this->User->findAll();
 		$this->set('users', $users);
 	}
 	
 	public function action() {
-		switch($this->request->data('hidAction')) {
-			case "Add":
-				add();
-				break;
-			case "Edit":
-				edit();
-				break;
-			case "Delete":
-				$this->delete();
-				break;
-			default:
-				Throw new NotFoundException();
-				break;
-		}
-		return false;
 	}
 	
 	public function add() {
+		edit();
 	}
 	
 	public function edit() {
+		$userId=$this->params['named']['id'];
+		if(empty($userId)) {
+			$this->set('title_for_layout', 'ユーザ登録');
+		} else {
+			$this->set('title_for_layout', 'ユーザ編集');
+		}
+		$user=$this->User->findByUserId($userId);
+		$this->set('user', $user);
 	}
 	
 	public function delete() {
-		if (isset($_POST['check'])) {
-			$checks = $_POST['check'];
-			
-			foreach ($checks as $check) {
-				$flg=$this->User->delete($check);
-			}
-		}
-		
+		$userId=$this->params['named']['id'];
+		$flg=$this->User->delete($userId);
 		$this->redirect(['controller'=>'CMN2000', 'action'=>'index']);
 	}
 }
