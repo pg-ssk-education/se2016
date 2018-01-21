@@ -1,3 +1,4 @@
+DELETE FROM se2016_M_USER;
 INSERT INTO se2016_M_USER (
   USER_ID,
   PASSWORD,
@@ -13,3 +14,22 @@ INSERT INTO se2016_M_USER (
   '2000-01-01',
   ''
 );
+
+DELETE FROM se2016_T_NOTIFICATION;
+INSERT INTO se2016_T_NOTIFICATION (
+  NOTIFICATION_ID,
+  TARGET_USER_ID,
+  LEVEL,
+  COMMENT
+) VALUES (
+  '1',
+  '',
+  'I',
+  '公開情報'
+),(
+  '2',
+  'admin',
+  'I',
+  'adminに対する情報'
+)
+;
