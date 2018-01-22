@@ -33,6 +33,16 @@ class CMN1010ControllerTest extends ControllerTestCase {
 		$this->assertNotContains('/CMN1010', $this->headers['Location']);
 	}
 
+	public function test_indexはログイン済みの場合にトップ画面を表示すること() {
+		// [準備]
+
+		// [実行]
+		$vars = $this->testAction('/CMN1010/index', ['method'=>'get', 'return'=>'vars']);
+
+		// [確認]
+		$this->assertEquals('トップ', $vars['title_for_layout']);
+	}
+
 	public function test_indexはviewにログインユーザーの通知情報だけを渡すこと() {
 		// [準備]
 
