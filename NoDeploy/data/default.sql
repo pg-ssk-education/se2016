@@ -9,8 +9,8 @@ INSERT INTO se2016_M_USER (
 ) VALUES (
   'admin',
   '0fdbe4a8deee26297be7b23a21c742880af452fec8f0a1d9ac9e9aa4a2a511ce',
-  'ŠÇ—Ò',
-  'ƒJƒ“ƒŠƒVƒƒ',
+  'ç®¡ç†è€…',
+  'ã‚«ãƒ³ãƒªã‚·ãƒ£',
   '2000-01-01',
   ''
 );

@@ -3,17 +3,9 @@ class User extends AppModel {
 	var $useTable = 'm_user';
 	var $primaryKey = 'USER_ID';
 
-	public $validate = [
-		'USER_ID'=>[
-			'rule'=>'notEmpty'
-		],
-		'PASSWORD'=>[
-			'rule'=>'notEmpty'
-		]
-	];
-
 	public function findAll() {
 		return $this->find('all',[
+			'conditions' => ['User.STATE' => 0],
 			'order' => ['User.USER_ID' => 'asc']
 		]);
 	}
@@ -31,8 +23,11 @@ class User extends AppModel {
 	}
 
 	public function findByUserId($userId) {
-		return $this->find('first', [
-			'conditions' => ['User.USER_ID' => $userId]
-		]);
+		$conditions = [
+			'User.USER_ID'=>$userId,
+			'User.STATE'=>0
+		];
+		
+		return $this->find('first', ['conditions' => $conditions]);
 	}
 }
