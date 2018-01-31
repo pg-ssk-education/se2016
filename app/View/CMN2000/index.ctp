@@ -1,11 +1,10 @@
 <?php
 	echo $this->Html->script('CMN2000',['inline'=>false]);
-	echo $this->Form->create(false,['controller'=>'CMN2000','action'=>'action']);
 ?>
 <div class="page-content">
 	<div class="page-block">
 		<div class="btn-group">
-			<?php echo $this->Html->link('追加', ['controller'=>'CMN2000', 'action'=>'edit', 'id'=>''], ['class'=>'btn']); ?>
+			<?php echo $this->Html->link('追加', ['controller'=>'CMN2000', 'action'=>'add', 'id'=>''], ['class'=>'btn']); ?>
 		</div>
 	</div>
 	<div class="page-block">
