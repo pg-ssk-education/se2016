@@ -1,3 +1,3 @@
 <div class="alert alert-error">
-	<?php echo h($message); ?>
+	<?php echo nl2br(h($message)); ?>
 </div>

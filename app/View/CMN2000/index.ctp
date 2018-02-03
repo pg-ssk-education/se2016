@@ -1,10 +1,10 @@
 <?php
-	echo $this->Html->script('CMN2000',['inline'=>false]);
+echo $this->Html->script('CMN2000', ['inline' => false]);
 ?>
 <div class="page-content">
 	<div class="page-block">
 		<div class="btn-group">
-			<?php echo $this->Html->link('追加', ['controller'=>'CMN2000', 'action'=>'add', 'id'=>''], ['class'=>'btn']); ?>
+			<?php echo $this->Html->link('追加', ['controller' => 'CMN2000', 'action' => 'add'], ['class' => 'btn']); ?>
 		</div>
 	</div>
 	<div class="page-block">
@@ -33,10 +33,10 @@
 						</td>
 						<td>
 							<div class="btn-group">
-								<?php echo $this->Html->link('編集', ['controller'=>'CMN2000', 'action'=>'edit', 'id'=>$user['User']['USER_ID']], ['class'=>'btn']); ?>
+								<?php echo $this->Html->link('編集', ['controller' => 'CMN2000', 'action' => 'edit', 'id' => $user['User']['USER_ID']], ['class'=>'btn']); ?>
 							</div>
 							<div class="btn-group">
-								<?php echo $this->Html->link('削除', ['controller'=>'CMN2000', 'action'=>'delete', 'id'=>$user['User']['USER_ID']], ['class'=>'btn'], $user['User']['NAME'].'を削除します。よろしいですか？'); ?>
+								<?php echo $this->Html->link('削除', ['controller' => 'CMN2000', 'action' => 'delete', 'id' => $user['User']['USER_ID']], ['class' => 'btn'], $user['User']['NAME'].'を削除します。よろしいですか？'); ?>
 							</div>
 						</td>
 					</tr>
