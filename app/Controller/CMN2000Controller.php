@@ -3,7 +3,7 @@ class CMN2000Controller extends AppController {
 
 	public $helpers = ['Html', 'Form'];
 	public $uses = ['User'];
-	public $components = array('Security');
+	public $components = ['Security'];
 
 	public function beforeFilter() {
 		$this->Security->requirePost(['insert', 'update']);
