@@ -120,7 +120,6 @@ class CMN2000Controller extends AppController
             $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
         	return;
         }
-
         if ($this->User->findByUserId($user['User']['USER_ID']) != null) {
             $this->setAlertMessage('ユーザIDが重複しています。', 'error');
             $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
@@ -136,7 +135,7 @@ class CMN2000Controller extends AppController
             'INS_USER_ID'  => $this->Session->read('loginUserId'),
             'UPD_USER_ID'  => $this->Session->read('loginUserId')
         ]);
-        if (!$this->User->save($user)) {
+        if (!$this->saveUser($user)) {
             $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
             $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
         	return;
@@ -148,6 +147,11 @@ class CMN2000Controller extends AppController
         $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
     }
 
+	public function saveUser($user)
+	{
+		return $this->User->save($user);
+	}
+	
     public function edit()
     {
         if (!$this->checkLogin()) return;

@@ -16,12 +16,14 @@ class CMN2000ControllerTest extends ControllerTestCase
         parent::setUp();
         CakeSession::write('loginUserId', 'testuser');
         CakeSession::delete('CMN2000');
+    	CakeSession::delete('Message');
     }
 
     public function tearDown()
     {
         CakeSession::delete('loginUserId');
         CakeSession::delete('CMN2000');
+    	CakeSession::delete('Message');
     }
 
 
@@ -202,7 +204,7 @@ class CMN2000ControllerTest extends ControllerTestCase
         CakeSession::delete('loginUserId');
 
         // [実行]
-        $this->testAction('/CMN2000/insert', ['method' => 'get']);
+        $this->testAction('/CMN2000/insert', ['method' => 'post']);
 
         // [確認]
         $this->assertStringEndsWith('/CMN1000', $this->headers['Location']);
@@ -213,7 +215,7 @@ class CMN2000ControllerTest extends ControllerTestCase
         // [準備]
 
         // [実行]
-        $this->testAction('/CMN2000/insert', ['method' => 'get']);
+        $this->testAction('/CMN2000/insert', ['method' => 'post']);
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
@@ -224,11 +226,226 @@ class CMN2000ControllerTest extends ControllerTestCase
         // [準備]
 
         // [実行]
-        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'get']);
+        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'post']);
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
     }
+
+    public function test_insertは入力に誤りがある場合にエラーメッセージをViewに設定しadduser画面に遷移すること()
+    {
+        // [準備]
+        $user = [
+            'User' => [
+                'USER_ID'      => '',
+                'NAME'         => '',
+                'NAME_KANA'    => '',
+                'COMMENT'      => '',
+                'EMPLOYEE_NUM' => '',
+                'MAIL_ADDRESS' => '',
+            ]
+        ];
+        CakeSession::write('CMN2000', ['Users' => [],'1234' => $user]);
+    	
+        // [実行]
+    	$post = [
+    		'txtUserId' => '', 
+    		'txtName' => '', 
+    		'txtNameKana' => '', 
+    		'txtComment' => 'コメント', 
+    		'txtEmployeeNum' => '', 
+    		'txtMailAddress' => 'test'
+        ];
+        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'post','data' => $post]);
+
+        // [確認]
+        $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
+    	$this->assertContains('ユーザIDを設定してください。', CakeSession::read('Message.alert-error.message'));
+    	$this->assertContains('氏名を設定してください。', CakeSession::read('Message.alert-error.message'));
+    	$this->assertContains('氏名(カナ)を設定してください', CakeSession::read('Message.alert-error.message'));
+    	$this->assertContains('社員番号を設定してください。', CakeSession::read('Message.alert-error.message'));
+    	$this->assertContains('メールアドレスはメールアドレス形式で設定してください。', CakeSession::read('Message.alert-error.message'));
+    	
+        // [準備]
+        CakeSession::write('CMN2000', ['Users' => [],'1234' => $user]);
+        // [実行]
+    	$post = [
+    		'txtUserId' => 'ユーザ', 
+    		'txtName' => 'テストユーザ', 
+    		'txtNameKana' => 'テストユーザ', 
+    		'txtComment' => 'コメント', 
+    		'txtEmployeeNum' => 'いちにさんよん', 
+    		'txtMailAddress' => 'test@example.com'
+        ];
+        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'post','data' => $post]);
+
+        // [確認]
+        $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
+    	$this->assertContains('ユーザIDはアルファベットまたは数字のみで設定してください。', CakeSession::read('Message.alert-error.message'));
+    	$this->assertContains('社員番号は数字のみで設定してください。', CakeSession::read('Message.alert-error.message'));
+    	
+        // [準備]
+        CakeSession::write('CMN2000', ['Users' => [],'1234' => $user]);
+        // [実行]
+    	$post = [
+    		'txtUserId' => '1234567', 
+    		'txtName' => 'テストユーザ', 
+    		'txtNameKana' => 'テストユーザ', 
+    		'txtComment' => 'コメント', 
+    		'txtEmployeeNum' => '1234', 
+    		'txtMailAddress' => 'test@example.com'
+        ];
+    	
+        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'post','data' => $post]);
+
+        // [確認]
+        $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
+    	$this->assertContains('ユーザIDは8文字以上32文字以下で設定してください。', CakeSession::read('Message.alert-error.message'));
+    	
+        // [準備]
+        CakeSession::write('CMN2000', ['Users' => [],'1234' => $user]);
+        // [実行]
+    	$post = [
+    		'txtUserId' => '123456789012345678901234567890123', 
+    		'txtName' => 'テストユーザ', 
+    		'txtNameKana' => 'テストユーザ', 
+    		'txtComment' => 'コメント', 
+    		'txtEmployeeNum' => '1234', 
+    		'txtMailAddress' => 'test@example.com'
+        ];
+        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'post','data' => $post]);
+
+        // [確認]
+        $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
+    	$this->assertContains('ユーザIDは8文字以上32文字以下で設定してください。', CakeSession::read('Message.alert-error.message'));
+    	
+    	// [準備]
+        CakeSession::write('CMN2000', ['Users' => [],'1111' => $user]);
+        // [実行]
+    	$post = [
+    		'txtUserId' => '12345678', 
+    		'txtName' => 'テストユーザ', 
+    		'txtNameKana' => 'テストユーザ', 
+    		'txtComment' => 'コメント', 
+    		'txtEmployeeNum' => '1234', 
+    		'txtMailAddress' => 'test@example.com'
+        ];
+        $this->testAction('/CMN2000/insert/id:1111', ['method' => 'post','data' => $post]);
+
+        // [確認]
+        $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
+    	$this->assertContains('登録しました。', CakeSession::read('Message.alert-success.message'));
+    	
+    	// [準備]
+        CakeSession::write('CMN2000', ['Users' => [],'2222' => $user]);
+        // [実行]
+    	$post = [
+    		'txtUserId' => '12345678901234567890123456789012', 
+    		'txtName' => 'テストユーザ', 
+    		'txtNameKana' => 'テストユーザ', 
+    		'txtComment' => 'コメント', 
+    		'txtEmployeeNum' => '1234', 
+    		'txtMailAddress' => 'test@example.com'
+        ];
+        $this->testAction('/CMN2000/insert/id:2222', ['method' => 'post','data' => $post]);
+
+        // [確認]
+        $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
+    	$this->assertContains('登録しました。', CakeSession::read('Message.alert-success.message'));
+    }
+
+    public function test_insertは入力に誤りがある場合にSessionのユーザ情報を入力値で更新すること()
+    {
+        // [準備]
+        $user = [
+            'User' => [
+                'USER_ID'      => '',
+                'NAME'         => '',
+                'NAME_KANA'    => '',
+                'COMMENT'      => '',
+                'EMPLOYEE_NUM' => '',
+                'MAIL_ADDRESS' => '',
+            ]
+        ];
+        CakeSession::write('CMN2000', ['Users' => [],'1234' => $user]);
+    	
+        // [実行]
+    	$post = [
+    		'txtUserId' => '1234567', 
+    		'txtName' => 'てすとゆーざ', 
+    		'txtNameKana' => 'テストユーザ', 
+    		'txtComment' => 'コメント', 
+    		'txtEmployeeNum' => '1234', 
+    		'txtMailAddress' => 'test@example.com'
+        ];
+        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'post','data' => $post]);
+
+        // [確認]
+        $user = [
+            'User' => [
+                'USER_ID'      => '1234567',
+                'NAME'         => 'てすとゆーざ',
+                'NAME_KANA'    => 'テストユーザ',
+                'COMMENT'      => 'コメント',
+                'EMPLOYEE_NUM' => '1234',
+                'MAIL_ADDRESS' => 'test@example.com',
+            ]
+        ];
+    	$this->assertEquals($user, CakeSession::read('CMN2000.1234'));
+    }
+
+    public function test_insertは登録しようとしたユーザIDがテーブルに存在する場合にエラーメッセージをViewに設定しadduser画面に遷移すること()
+    {
+        // [準備]
+
+        // [実行]
+        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'post']);
+
+        // [確認]
+        $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
+    }
+
+    public function test_insertは登録しようとしたユーザIDが削除ユーザとしてテーブルに存在する場合にエラーメッセージをViewに設定しadduser画面に遷移すること()
+    {
+        // [準備]
+
+        // [実行]
+        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'post']);
+
+        // [確認]
+        $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
+    }
+
+    public function test_insertはテーブルの登録に失敗した場合にエラーメッセージをViewに設定しadduser画面に遷移すること()
+    {
+        // [準備]
+
+        // [実行]
+        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'post']);
+
+        // [確認]
+        $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
+    }
+
+    public function test_insertは入力値をテーブルに登録すること()
+    {
+        // [準備]
+
+        // [実行]
+        $this->testAction('/CMN2000/insert/id:1234', ['method' => 'post']);
+
+        // [確認]
+        $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
+    }
+
+
+
+
+
+
+
+
+
 
 
 
