@@ -197,6 +197,11 @@ class CMN2000Controller extends AppController
     {
         if (!$this->checkLogin()) return;
 
+        if (!array_key_exists('id',$this->params['named'])){
+            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
+        	return;
+        }
+
         $token = $this->params['named']['id'];
         if ($token == null) {
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);

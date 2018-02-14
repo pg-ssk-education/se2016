@@ -229,4 +229,49 @@ class CMN2000ControllerTest extends ControllerTestCase
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//updateの分
+	public function test_updateは未ログインの場合にログイン画面を表示すること() {
+		// [準備]
+		CakeSession::delete('loginUserId');
+
+		// [実行]
+		$this->testAction('/CMN2000/update', ['method'=>'get']);
+
+		// [確認]
+		$this->assertNotContains('/CMN2000', $this->headers['Location']);
+	}
+
+	public function test_updateはtokenが取得できない場合にCMN2000のindex画面に遷移すること(){
+		// [準備]
+		
+		// [実行]
+		$this->testAction('/CMN2000/update', ['method'=>'get']);
+		
+		// [確認]
+		$this->assertRegExp('/^.*CMN2000$/', $this->headers['Location']);
+	}
+
+	public function test_updateはSessionが取得できない場合にCMN2000のindex画面に遷移すること(){
+		// [準備]
+		
+		// [実行]
+		$this->testAction('/CMN2000/update/id:1234', ['method'=>'get']);
+		
+		// [確認]
+		$this->assertRegExp('/^.*CMN2000$/', $this->headers['Location']);
+	}
+
 }
