@@ -60,11 +60,11 @@ class CMN2000Controller extends AppController
 	public function getUniqId() {
 		return uniqid();
 	}
-	
+
     public function adduser()
     {
         if (!$this->checkLogin()) return;
-    	
+
     	if (!array_key_exists('id',$this->params['named'])){
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
         	return;
@@ -151,10 +151,16 @@ class CMN2000Controller extends AppController
 	{
 		return $this->User->save($user);
 	}
-	
+
     public function edit()
     {
         if (!$this->checkLogin()) return;
+
+        $session = $this->Session->read('CMN2000');
+        if ($session == null) {
+            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
+        	return;
+        }
 
         $userId = $this->params['named']['id'];
         $user = $this->getUserFromSession($userId);
@@ -163,12 +169,7 @@ class CMN2000Controller extends AppController
         	return;
         }
 
-        $session = $this->Session->read('CMN2000');
-        if ($session == null) {
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-        	return;
-        }
-        $token = uniqid();
+        $token = $this->getUniqId();
         $session = array_replace($session, [$token => $user]);
         $this->Session->write('CMN2000', $session);
         $this->redirect(['controller' => 'CMN2000', 'action' => 'edituser', 'id' => $token]);
