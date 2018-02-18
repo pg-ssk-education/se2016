@@ -14,7 +14,7 @@ class CMN1000Controller extends AppController
         // すでにログイン済みの場合はトップページへ遷移
         if ($this->Session->check('loginUserId')) {
             $this->redirect(['controller' => 'CMN1010', 'action' => 'index']);
-			return;
+            return;
         }
 
         $this->set('title_for_layout', 'ログイン');
