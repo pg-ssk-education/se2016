@@ -20,9 +20,7 @@ class WebDriverTest extends PHPUnit_Extensions_Selenium2TestCase
 
         $this->byId('txtPassword')->value("admin");
         
-        $this->submit();
-        
-//        $this->byId('btnLogin').click();
+        $this->byCssSelector('.btn')->click();
         $this->assertStringStartsWith('トップ:', $this->title());
     
         $fp = fopen('hoge.png', 'w');
