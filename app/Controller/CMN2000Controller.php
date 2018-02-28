@@ -173,6 +173,8 @@ class CMN2000Controller extends AppController
             return;
         }
 
+//ToDo：namedにidがあるかのチェックをすること
+
         $userId = $this->params['named']['id'];
         $user = $this->getUserFromSession($userId);
         if ($user == null) {
@@ -192,13 +194,13 @@ class CMN2000Controller extends AppController
             return;
         }
 
-        $token = $this->params['named']['id'];
-        if ($token == null) {
+        if (!array_key_exists('id', $this->params['named'])) {
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
             return;
         }
+        $token = $this->params['named']['id'];
         $session = $this->Session->read('CMN2000');
-        if ($session == null || $session[$token] == null) {
+        if ($session == null || !array_key_exists($token, $session)) {
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
             return;
         }
@@ -223,13 +225,8 @@ class CMN2000Controller extends AppController
         }
 
         $token = $this->params['named']['id'];
-        if ($token == null) {
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            return;
-        }
-
         $session = $this->Session->read('CMN2000');
-        if ($session == null || $session[$token] == null) {
+        if ($session == null || !array_key_exists($token, $session)) {
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
             return;
         }
@@ -277,7 +274,7 @@ class CMN2000Controller extends AppController
             'REVISION'     => $userOfDb['User']['REVISION'] + 1
         ]);
 
-        if (!$this->User->save($userOfDb)) {
+        if (!$this->saveUser($userOfDb)) {
             $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
             $this->redirect(['controller' => 'CMN2000', 'action' => 'edituser', 'id' => $token]);
             return;
@@ -295,12 +292,19 @@ class CMN2000Controller extends AppController
             return;
         }
 
+        if (!array_key_exists('id', $this->params['named'])) {
+            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
+            return;
+        }
+        
         $userId = $this->params['named']['id'];
         if ($userId == null) {
             $this->setAlertMessage('削除対象のユーザが指定されていません。', 'error');
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
             return;
         }
+        
+        
         $userOfDb = $this->User->findByUserId($userId);
         if ($userId == null) {
             $this->setAlertMessage('削除対象のユーザは存在しません。', 'error');
