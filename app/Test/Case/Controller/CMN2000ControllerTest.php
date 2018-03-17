@@ -711,8 +711,8 @@ class CMN2000ControllerTest extends ControllerTestCase
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
     }
 
-	public function test_updateは更新しようとしたユーザIDが削除されている場合にエラーメッセージをViewに設定しindex画面に遷移すること()
-	{
+    public function test_updateは更新しようとしたユーザIDが削除されている場合にエラーメッセージをViewに設定しindex画面に遷移すること()
+    {
         // [準備]
         $user = [
             'User' => [
@@ -732,10 +732,10 @@ class CMN2000ControllerTest extends ControllerTestCase
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
         $this->assertContains('更新対象のユーザは削除されています。', CakeSession::read('Message.alert-error.message'));
-	}
+    }
 
-	public function test_updateは更新しようとしたユーザIDが更新されている場合にエラーメッセージをViewに設定しindex画面に遷移すること()
-	{
+    public function test_updateは更新しようとしたユーザIDが更新されている場合にエラーメッセージをViewに設定しindex画面に遷移すること()
+    {
         // [準備]
         $user = [
             'User' => [
@@ -779,10 +779,10 @@ class CMN2000ControllerTest extends ControllerTestCase
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
         $this->assertContains('更新対象のユーザは更新されているため変更できません。', CakeSession::read('Message.alert-error.message'));
-	}
+    }
 
-	public function test_updateは入力に誤りがある場合にエラーメッセージをViewに設定しedituser画面に遷移すること()
-	{
+    public function test_updateは入力に誤りがある場合にエラーメッセージをViewに設定しedituser画面に遷移すること()
+    {
         // [準備]
         $user = $this->User->findByUserId('testuser1');
         CakeSession::write('CMN2000', ['Users' => [],'1234' => $user]);
@@ -838,7 +838,6 @@ class CMN2000ControllerTest extends ControllerTestCase
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
         $this->assertContains('更新しました。', CakeSession::read('Message.alert-success.message'));
-
     }
 
     public function test_updateは入力に誤りがある場合にSessionのユーザ情報を入力値で更新すること()
@@ -870,7 +869,8 @@ class CMN2000ControllerTest extends ControllerTestCase
         $this->assertEquals($userOfDb, CakeSession::read('CMN2000.1234'));
     }
 
-	public function test_updateはテーブルの更新に失敗した場合にエラーメッセージをViewに設定しedituser画面に遷移すること(){
+    public function test_updateはテーブルの更新に失敗した場合にエラーメッセージをViewに設定しedituser画面に遷移すること()
+    {
         // [準備]
         $userOfDb = $this->User->findByUserId('testuser1');
         CakeSession::write('CMN2000', ['Users' => [],'1234' => $userOfDb]);
@@ -897,9 +897,10 @@ class CMN2000ControllerTest extends ControllerTestCase
         // [確認]
         $this->assertStringEndsWith('/CMN2000/edituser/id:1234', $this->headers['Location']);
         $this->assertContains('予期せぬエラーが発生しました。', CakeSession::read('Message.alert-error.message'));
-	}
+    }
 
-	public function test_updateは入力値でテーブルを更新すること(){
+    public function test_updateは入力値でテーブルを更新すること()
+    {
         // [準備]
         $userOfDb = $this->User->findByUserId('testuser1');
         CakeSession::write('CMN2000', ['Users' => [],'1234' => $userOfDb]);
@@ -929,13 +930,12 @@ class CMN2000ControllerTest extends ControllerTestCase
         $this->assertContains('更新しました。', CakeSession::read('Message.alert-success.message'));
         
         //ToDo:更新日時の確認をすること
-        
-	}
-	
-	
-	
-	public function test_deleteは未ログインの場合にログイン画面を表示すること()
-	{
+    }
+    
+    
+    
+    public function test_deleteは未ログインの場合にログイン画面を表示すること()
+    {
         // [準備]
         CakeSession::delete('loginUserId');
 
@@ -944,9 +944,9 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN1000', $this->headers['Location']);
-	}
-	
-	public function test_deleteはuserIdが取得できない場合にCMN2000のindex画面に遷移すること()
+    }
+    
+    public function test_deleteはuserIdが取得できない場合にCMN2000のindex画面に遷移すること()
     {
         // [準備]
 
@@ -956,10 +956,10 @@ class CMN2000ControllerTest extends ControllerTestCase
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
     }
-	
+    
     public function test_deleteは削除しようとしたユーザIDが削除されている場合にエラーメッセージをViewに設定しindex画面に遷移すること()
-	{
-    	// [準備]
+    {
+        // [準備]
         CakeSession::write('CMN2000', ['Users' => []]);
 
         // [実行]
@@ -968,49 +968,44 @@ class CMN2000ControllerTest extends ControllerTestCase
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
         $this->assertContains('削除対象のユーザは存在しません。', CakeSession::read('Message.alert-error.message'));
-
     }
     
     public function test_deleteは削除しようとしたユーザIDがSessionに存在しない場合にエラーメッセージをViewに設定しindex画面に遷移すること()
-	{
-		// [準備]
-		CakeSession::write('CMN2000', ['Users' => []]);
-		
-		// [実行]
-		$vars = $this->testAction('/CMN2000/delete/id:testuser1', ['method' => 'get']);
-		
-		// [確認]
+    {
+        // [準備]
+        CakeSession::write('CMN2000', ['Users' => []]);
+        
+        // [実行]
+        $vars = $this->testAction('/CMN2000/delete/id:testuser1', ['method' => 'get']);
+        
+        // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
         $this->assertContains('削除対象のユーザは存在しません。', CakeSession::read('Message.alert-error.message'));
-
-	}
-	
-	public function test_deleteは削除しようとしたユーザIDが更新されている場合にエラーメッセージをViewに設定しindex画面に遷移すること()
-	{
-		// [準備]
-		
-		$users = $this->User->findAll();
-		
-		$users[0]['User']['REVISION'] = 2;
-		
-		CakeSession::write('CMN2000', ['Users' => $users]);
-		
-		
-		// [実行]
-		$vars = $this->testAction('/CMN2000/delete/id:'.$users[0]['User']['USER_ID'], ['method' => 'get']);
-		
-		// [確認]
+    }
+    
+    public function test_deleteは削除しようとしたユーザIDが更新されている場合にエラーメッセージをViewに設定しindex画面に遷移すること()
+    {
+        // [準備]
+        
+        $users = $this->User->findAll();
+        
+        $users[0]['User']['REVISION'] = 2;
+        
+        CakeSession::write('CMN2000', ['Users' => $users]);
+        
+        
+        // [実行]
+        $vars = $this->testAction('/CMN2000/delete/id:'.$users[0]['User']['USER_ID'], ['method' => 'get']);
+        
+        // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
         $this->assertContains('削除対象ユーザは更新されているため削除できません。', CakeSession::read('Message.alert-error.message'));
-
-		
-		
-	}
-	
-	public function test_deleteはテーブルの更新に失敗した場合にエラーメッセージをViewに設定しindex画面に遷移すること()
-	{
+    }
+    
+    public function test_deleteはテーブルの更新に失敗した場合にエラーメッセージをViewに設定しindex画面に遷移すること()
+    {
         // [準備]
-		$users = $this->User->findAll();
+        $users = $this->User->findAll();
         CakeSession::write('CMN2000', ['Users' => $users]);
         
         $CMN2000 = $this->generate('CMN2000', [
@@ -1027,52 +1022,51 @@ class CMN2000ControllerTest extends ControllerTestCase
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
         $this->assertContains('予期せぬエラーが発生しました。', CakeSession::read('Message.alert-error.message'));
-	}
-	
-	public function test_deleteは対象ユーザをテーブルから削除すること()
-	{
+    }
+    
+    public function test_deleteは対象ユーザをテーブルから削除すること()
+    {
         // [準備]
-		$users = $this->User->findAll();
+        $users = $this->User->findAll();
         CakeSession::write('CMN2000', ['Users' => $users]);
 
         // [実行]
         $this->testAction('/CMN2000/delete/id:testuser1', ['method' => 'get']);
 
         // [確認]
-		$userOfDb = $this->User->find('first', ['conditions' => ['User.USER_ID' => 'testuser1']]);		
+        $userOfDb = $this->User->find('first', ['conditions' => ['User.USER_ID' => 'testuser1']]);
         $this->assertEquals('testuser1', $userOfDb['User']['USER_ID']);
-		$this->assertEquals('2f2b50323926a3893c9ff36b167ad2dad4dd48935d160bdb68971c9091534f8c', $userOfDb['User']['PASSWORD']);
+        $this->assertEquals('2f2b50323926a3893c9ff36b167ad2dad4dd48935d160bdb68971c9091534f8c', $userOfDb['User']['PASSWORD']);
         $this->assertEquals('テストユーザ1', $userOfDb['User']['NAME']);
         $this->assertEquals('テストユーザ1', $userOfDb['User']['NAME_KANA']);
         $this->assertEquals('コメント1', $userOfDb['User']['COMMENT']);
         $this->assertEquals('0001', $userOfDb['User']['EMPLOYEE_NUM']);
         $this->assertEquals('test1@example.com', $userOfDb['User']['MAIL_ADDRESS']);
         $this->assertEquals('2018-01-01 00:00:00', $userOfDb['User']['INS_DATETIME']);
-		$this->assertEquals('testuser1', $userOfDb['User']['INS_USER_ID']);
-		$this->assertStringStartsWith(date('Y-m-d'), $userOfDb['User']['UPD_DATETIME']);
-		$this->assertEquals('testuser', $userOfDb['User']['UPD_USER_ID']);
-		$this->assertEquals(1, $userOfDb['User']['ROW_NUM']);
-		$this->assertEquals(2, $userOfDb['User']['REVISION']);
-		$this->assertEquals(1, $userOfDb['User']['STATE']);
-		
-		$userOfDb = $this->User->find('first', ['conditions' => ['User.USER_ID' => 'testuser2']]);		
+        $this->assertEquals('testuser1', $userOfDb['User']['INS_USER_ID']);
+        $this->assertStringStartsWith(date('Y-m-d'), $userOfDb['User']['UPD_DATETIME']);
+        $this->assertEquals('testuser', $userOfDb['User']['UPD_USER_ID']);
+        $this->assertEquals(1, $userOfDb['User']['ROW_NUM']);
+        $this->assertEquals(2, $userOfDb['User']['REVISION']);
+        $this->assertEquals(1, $userOfDb['User']['STATE']);
+        
+        $userOfDb = $this->User->find('first', ['conditions' => ['User.USER_ID' => 'testuser2']]);
         $this->assertEquals($userOfDb['User']['USER_ID'], 'testuser2');
-		$this->assertEquals($userOfDb['User']['PASSWORD'], '2f2b50323926a3893c9ff36b167ad2dad4dd48935d160bdb68971c9091534f8c');
+        $this->assertEquals($userOfDb['User']['PASSWORD'], '2f2b50323926a3893c9ff36b167ad2dad4dd48935d160bdb68971c9091534f8c');
         $this->assertEquals($userOfDb['User']['NAME'], 'テストユーザ2');
         $this->assertEquals($userOfDb['User']['NAME_KANA'], 'テストユーザ2');
         $this->assertEquals($userOfDb['User']['COMMENT'], 'コメント2');
         $this->assertEquals($userOfDb['User']['EMPLOYEE_NUM'], '0002');
         $this->assertEquals($userOfDb['User']['MAIL_ADDRESS'], 'test2@example.com');
         $this->assertEquals($userOfDb['User']['INS_DATETIME'], '2018-02-02 00:00:00');
-		$this->assertEquals($userOfDb['User']['INS_USER_ID'], 'testuser2');
-		$this->assertEquals($userOfDb['User']['UPD_DATETIME'], '2018-02-02 00:00:00');
-		$this->assertEquals($userOfDb['User']['UPD_USER_ID'], 'testuser2');
-		$this->assertEquals($userOfDb['User']['ROW_NUM'], 2);
-		$this->assertEquals($userOfDb['User']['REVISION'], 2);
-		$this->assertEquals($userOfDb['User']['STATE'], 0);
-		
+        $this->assertEquals($userOfDb['User']['INS_USER_ID'], 'testuser2');
+        $this->assertEquals($userOfDb['User']['UPD_DATETIME'], '2018-02-02 00:00:00');
+        $this->assertEquals($userOfDb['User']['UPD_USER_ID'], 'testuser2');
+        $this->assertEquals($userOfDb['User']['ROW_NUM'], 2);
+        $this->assertEquals($userOfDb['User']['REVISION'], 2);
+        $this->assertEquals($userOfDb['User']['STATE'], 0);
+        
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
         $this->assertContains('削除しました。', CakeSession::read('Message.alert-success.message'));
-	}
-		
+    }
 }

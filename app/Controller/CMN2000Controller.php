@@ -129,36 +129,35 @@ class CMN2000Controller extends AppController
             $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
             return;
         }
-    	
-    	try {
-    		$this->TransactionManager->begin();
-    		
-	        if ($this->User->findByUserId($user['User']['USER_ID']) != null) {
-	            $this->setAlertMessage('ユーザIDが重複しています。', 'error');
-	            $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
-	        	throw new Exception();
-	        }
-	        if ($this->User->findDeletedByUserId($user['User']['USER_ID']) != null) {
-	            $this->setAlertMessage('削除されたユーザとユーザIDが重複しています。', 'error');
-	            $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
-	            throw new Exception();
-	        }
 
-	        $user['User'] = array_replace($user['User'], [
-	            'INS_USER_ID'  => $this->Session->read('loginUserId'),
-	            'UPD_USER_ID'  => $this->Session->read('loginUserId')
-	        ]);
-	        if (!$this->saveUser($user)) {
-	            $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
-	            $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
-	            throw new Exception();
-	        }
-    		$this->TransactionManager->commit();
-    		
-    	} catch(Exception $e) {
-    		$this->TransactionManager->rollback();
-    		return;
-    	}
+        try {
+            $this->TransactionManager->begin();
+
+            if ($this->User->findByUserId($user['User']['USER_ID']) != null) {
+                $this->setAlertMessage('ユーザIDが重複しています。', 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
+                throw new Exception();
+            }
+            if ($this->User->findDeletedByUserId($user['User']['USER_ID']) != null) {
+                $this->setAlertMessage('削除されたユーザとユーザIDが重複しています。', 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
+                throw new Exception();
+            }
+
+            $user['User'] = array_replace($user['User'], [
+                'INS_USER_ID'  => $this->Session->read('loginUserId'),
+                'UPD_USER_ID'  => $this->Session->read('loginUserId')
+            ]);
+            if (!$this->saveUser($user)) {
+                $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
+                throw new Exception();
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            return;
+        }
 
         unset($session[$token]);
         $this->Session->write('CMN2000', $session);
@@ -183,7 +182,7 @@ class CMN2000Controller extends AppController
             return;
         }
 
-//ToDo：namedにidがあるかのチェックをすること
+        //ToDo：namedにidがあるかのチェックをすること
 
         $userId = $this->params['named']['id'];
         $user = $this->getUserFromSession($userId);
@@ -253,30 +252,30 @@ class CMN2000Controller extends AppController
         $session = array_replace($session, [$token => $user]);
         $this->Session->write('CMN2000', $session);
 
-    	try {
-    		$this->TransactionManager->begin();
-    		
-        $userOfDb = $this->User->findByUserId($user['User']['USER_ID']);
-        if ($userOfDb == null) {
-            $this->setAlertMessage('更新対象のユーザは削除されています。', 'error');
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            throw new Exception();
-        }
+        try {
+            $this->TransactionManager->begin();
 
-        if ($user['User']['ROW_NUM'] != $userOfDb['User']['ROW_NUM'] || $user['User']['REVISION'] != $userOfDb['User']['REVISION']) {
-            $this->setAlertMessage('更新対象のユーザは更新されているため変更できません。', 'error');
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            throw new Exception();
-        }
+            $userOfDb = $this->User->findByUserId($user['User']['USER_ID']);
+            if ($userOfDb == null) {
+                $this->setAlertMessage('更新対象のユーザは削除されています。', 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
+                throw new Exception();
+            }
 
-        $this->User->set($user);
-        if (!$this->User->validates()) {
-            $this->setAlertMessage($this->User->validationErrors, 'error');
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'edituser', 'id' => $token]);
-            throw new Exception();
-        }
+            if ($user['User']['ROW_NUM'] != $userOfDb['User']['ROW_NUM'] || $user['User']['REVISION'] != $userOfDb['User']['REVISION']) {
+                $this->setAlertMessage('更新対象のユーザは更新されているため変更できません。', 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
+                throw new Exception();
+            }
 
-        $userOfDb['User'] = array_replace($userOfDb['User'], [
+            $this->User->set($user);
+            if (!$this->User->validates()) {
+                $this->setAlertMessage($this->User->validationErrors, 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'edituser', 'id' => $token]);
+                throw new Exception();
+            }
+
+            $userOfDb['User'] = array_replace($userOfDb['User'], [
             'NAME'         => $user['User']['NAME'],
             'NAME_KANA'    => $user['User']['NAME_KANA'],
             'COMMENT'      => $user['User']['COMMENT'],
@@ -287,17 +286,17 @@ class CMN2000Controller extends AppController
             'REVISION'     => $userOfDb['User']['REVISION'] + 1
         ]);
 
-        if (!$this->saveUser($userOfDb)) {
-            $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'edituser', 'id' => $token]);
-        	throw new Exception();
+            if (!$this->saveUser($userOfDb)) {
+                $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'edituser', 'id' => $token]);
+                throw new Exception();
+            }
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            return;
         }
-    		
-    		$this->TransactionManager->commit();
-    	} catch(Exception $e) {
-    		$this->TransactionManager->rollback();
-    		return;
-    	}
 
         unset($session[$token]);
         $this->Session->write('CMN2000', $session);
@@ -315,52 +314,52 @@ class CMN2000Controller extends AppController
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
             return;
         }
-        
+
         $userId = $this->params['named']['id'];
         if ($userId == null) {
             $this->setAlertMessage('削除対象のユーザが指定されていません。', 'error');
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
             return;
         }
-        
-    	try {
-    		$this->TransactionManager->begin();
-    		
-        $userOfDb = $this->User->findByUserId($userId);
-        if ($userId == null) {
-            $this->setAlertMessage('削除対象のユーザは存在しません。', 'error');
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            throw new Exception();
-        }
-        $userOfSession = $this->getUserFromSession($userId);
-        if ($userOfSession == null) {
-            $this->setAlertMessage('削除対象のユーザは存在しません。', 'error');
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            throw new Exception();
-        }
 
-        if ($userOfDb['User']['ROW_NUM'] != $userOfSession['User']['ROW_NUM'] || $userOfDb['User']['REVISION'] != $userOfSession['User']['REVISION']) {
-            $this->setAlertMessage('削除対象ユーザは更新されているため削除できません。', 'error');
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            throw new Exception();
-        }
+        try {
+            $this->TransactionManager->begin();
 
-        $userOfDb['User'] = array_replace($userOfDb['User'], [
+            $userOfDb = $this->User->findByUserId($userId);
+            if ($userId == null) {
+                $this->setAlertMessage('削除対象のユーザは存在しません。', 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
+                throw new Exception();
+            }
+            $userOfSession = $this->getUserFromSession($userId);
+            if ($userOfSession == null) {
+                $this->setAlertMessage('削除対象のユーザは存在しません。', 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
+                throw new Exception();
+            }
+
+            if ($userOfDb['User']['ROW_NUM'] != $userOfSession['User']['ROW_NUM'] || $userOfDb['User']['REVISION'] != $userOfSession['User']['REVISION']) {
+                $this->setAlertMessage('削除対象ユーザは更新されているため削除できません。', 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
+                throw new Exception();
+            }
+
+            $userOfDb['User'] = array_replace($userOfDb['User'], [
             'STATE'        => 1,
-        	'UPD_DATETIME' => date('Y-m-d H:i:s'),
+            'UPD_DATETIME' => date('Y-m-d H:i:s'),
             'UPD_USER_ID'  => $this->Session->read('loginUserId'),
             'REVISION'     => $userOfDb['User']['REVISION'] + 1
         ]);
-        if (!$this->saveUser($userOfDb, false)) {
-            $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            throw new Exception();
+            if (!$this->saveUser($userOfDb, false)) {
+                $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
+                $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
+                throw new Exception();
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            return;
         }
-    		$this->TransactionManager->commit();
-    	} catch(Exception $e) {
-    		$this->TransactionManager->rollback();
-    		return;
-    	}
 
         $this->setAlertMessage('削除しました。', 'success');
         $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);

@@ -8,12 +8,12 @@ class CMN1000Test extends AbstractTest
         parent::setUp();
         
         $this->deleteTableData(['se2016_m_user']);
-    	$this->executeSql('insert into se2016_m_user (USER_ID, PASSWORD) values (:user_id, :password)', [
-    		[
-	    		':user_id'  => 'testuser',
-	    		':password' => '9f9ff97a8f087c7233a4964367b6f06d4130aaf4c3d4486d987b84d46817d9b4'
-	    	]
-    	]);
+        $this->executeSql('insert into se2016_m_user (USER_ID, PASSWORD) values (:user_id, :password)', [
+            [
+                ':user_id'  => 'testuser',
+                ':password' => '9f9ff97a8f087c7233a4964367b6f06d4130aaf4c3d4486d987b84d46817d9b4'
+            ]
+        ]);
     }
     
     public function test_ログイン画面は未ログインの場合にログイン画面を表示すること()
