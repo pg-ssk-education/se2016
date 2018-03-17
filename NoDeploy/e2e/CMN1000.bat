@@ -1,1 +1,1 @@
-vendor/bin/phpunit CMN1000.php > CMN1000.output
+vendor/bin/phpunit CMN1000.php > temp/CMN1000.output

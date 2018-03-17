@@ -28,4 +28,4 @@ Thumbs.db
 /NoDeploy/create_all_table.sql
 /NoDeploy/e2e/vendor
 /NoDeploy/e2e/composer.lock
-/NoDeploy/e2e/*.output
+/NoDeploy/e2e/temp
