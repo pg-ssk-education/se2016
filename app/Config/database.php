@@ -74,7 +74,7 @@ class DATABASE_CONFIG {
 		'password' => 'education',
 		'database' => 'education',
 		'prefix' => 'se2016_',
-		//'encoding' => 'utf8',
+		'encoding' => 'utf8',
 	);
 
 	public $test = array(
@@ -85,6 +85,6 @@ class DATABASE_CONFIG {
 		'password' => 'education',
 		'database' => 'education',
 		'prefix' => 'se2016test_',
-		//'encoding' => 'utf8',
+		'encoding' => 'utf8',
 	);
 }
