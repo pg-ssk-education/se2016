@@ -20,14 +20,14 @@ echo $this->Form->create(false, ['url' => ['controller' => 'CMN2000', 'action' =
 		<div class="btn-group">
 			<?php
 			if ($action == 'insert') {
-				echo $this->Form->button('登録', ['type' => 'submit', 'class' => 'btn']);
+				echo $this->Form->button('登録', ['type' => 'submit', 'class' => 'btn btnInsert']);
 			} else {
-				echo $this->Form->button('更新', ['type' => 'submit', 'class' => 'btn']);
+				echo $this->Form->button('更新', ['type' => 'submit', 'class' => 'btn btnUpdate']);
 			}
 			?>
 		</div>
 		<div class="btn-group">
-			<?php echo $this->Html->link('キャンセル', ['controller' => 'CMN2000', 'action' => 'index'], ['class' => 'btn'], 'キャンセルします。よろしいですか？'); ?>
+			<?php echo $this->Html->link('キャンセル', ['controller' => 'CMN2000', 'action' => 'index'], ['class' => 'btn btnCancel'], 'キャンセルします。よろしいですか？'); ?>
 		</div>
 	</div>
 </div>
