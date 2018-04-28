@@ -26,8 +26,8 @@ Icon?
 ehthumbs.db
 Thumbs.db
 /NoDeploy/create_all_table.sql
+/NoDeploy/e2e/*.lock
 /NoDeploy/e2e/vendor
 /NoDeploy/e2e/composer.lock
 /NoDeploy/e2e/temp
-/NoDeploy/e2e/AbstractTest.php
 /NoDeploy/e2e/AbstractTest.php
