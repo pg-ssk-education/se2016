@@ -40,11 +40,31 @@ class AppController extends Controller {
 	public $layout = 'bootstrap';
 
 	public function setAlertMessage($message, $type) {
+		// $type : error or success or notice
+
+		$messageText = $this->getMessageText($message);
+
 		if ($this->Session->check('Message.alert-' . $type)) {
-			$this->Session->setFlash($this->Session->read('Message.alert-' . $type) . '<br />' . $message, 'flash_' . $type, [], 'alert-' . $type);
+		 	$this->Session->setFlash($this->Session->read('Message.alert-' . $type)['message'] . "\n" . $messageText, 'flash_' . $type, [], 'alert-' . $type);
 		} else {
-			$this->Session->setFlash($message, 'flash_' . $type, [], 'alert-' . $type);
+			$this->Session->setFlash($messageText, 'flash_' . $type, [], 'alert-' . $type);
 		}
+	}
+
+	public function getMessageText($message) {
+		$result = '';
+		$delimiter = '';
+
+		if (is_array($message)) {
+			foreach($message as $it) {
+				$result = $result . $delimiter . $this->getMessageText($it);
+				$delimiter = "\n";
+			}
+		} else {
+			$result = $message;
+		}
+
+		return $result;
 	}
 
 	public function logined() {
@@ -56,14 +76,15 @@ class AppController extends Controller {
 		}
 		return false;
 	}
-	
+
 	public function checkLogin() {
 		if (isset($this->Session)) {
 			$loginUserId = $this->Session->read('loginUserId');
 			if (isset($loginUserId)) {
-				return;
+				return true;
 			}
 		}
 		$this->redirect(['controller'=>'CMN1000', 'action'=>'index']);
+		return false;
 	}
 }

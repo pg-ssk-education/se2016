@@ -44,10 +44,10 @@
 	</div>
 
 	<div class="container">
-		<?php if ($this->Session->check('Message.alert-nortice') || $this->Session->check('Message.alert-success') || $this->Session->check('Message.alert-error')): ?>
+		<?php if ($this->Session->check('Message.alert-notice') || $this->Session->check('Message.alert-success') || $this->Session->check('Message.alert-error')): ?>
 			<section id="alerts">
 				<?php
-				echo $this->Session->flash('alert-nortice');
+				echo $this->Session->flash('alert-notice');
 				echo $this->Session->flash('alert-success');
 				echo $this->Session->flash('alert-error');
 				?>
