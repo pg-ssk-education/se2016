@@ -4,18 +4,18 @@
  *
  * Test Case for i18n extraction shell task
  *
- * CakePHP :  Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP :  Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP Project
  * @package       Cake.Test.Case.Console.Command.Task
  * @since         CakePHP v 1.2.0.7726
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Folder', 'Utility');
@@ -102,11 +102,11 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertRegExp($pattern, $result);
 
 		$pattern = '/msgid "The %s is being used for caching. To change the config edit ';
-		$pattern .= 'APP\/config\/core.php "\nmsgstr ""\n/';
+		$pattern .= '%s\/core.php "\nmsgstr ""\n/';
 		$this->assertRegExp($pattern, $result);
 
 		$pattern = '/msgid "Your cache is NOT working. Please check ';
-		$pattern .= 'the settings in APP\/config\/core.php"\nmsgstr ""\n/';
+		$pattern .= 'the settings in %s\/core.php"\nmsgstr ""\n/';
 		$this->assertRegExp($pattern, $result);
 
 		$pattern = '/msgid "Your database configuration file is present."\nmsgstr ""\n/';
@@ -218,6 +218,34 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertNotRegExp($pattern, $result);
 
 		$pattern = '/\#: .*extract\.ctp:33\n/';
+		$this->assertNotRegExp($pattern, $result);
+	}
+
+/**
+ * testExtractWithoutLocations method
+ *
+ * @return void
+ */
+	public function testExtractWithoutLocations() {
+		$this->Task->interactive = false;
+
+		$this->Task->params['paths'] = CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS . 'Pages';
+		$this->Task->params['output'] = $this->path . DS;
+		$this->Task->params['extract-core'] = 'no';
+		$this->Task->params['merge'] = 'no';
+		$this->Task->params['no-location'] = true;
+
+		$this->Task->expects($this->never())->method('err');
+		$this->Task->expects($this->any())->method('in')
+			->will($this->returnValue('y'));
+		$this->Task->expects($this->never())->method('_stop');
+
+		$this->Task->execute();
+		$this->assertTrue(file_exists($this->path . DS . 'default.pot'));
+
+		$result = file_get_contents($this->path . DS . 'default.pot');
+
+		$pattern = '/\n\#: .*\n/';
 		$this->assertNotRegExp($pattern, $result);
 	}
 
