@@ -208,7 +208,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('予期しないエラーが発生しました。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('予期しないエラーが発生しました。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_insertは未ログインの場合にログイン画面を表示すること()
@@ -273,11 +273,11 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
-        $this->assertContains('ユーザIDを設定してください。', CakeSession::read('Message.alert-error.message'));
-        $this->assertContains('氏名を設定してください。', CakeSession::read('Message.alert-error.message'));
-        $this->assertContains('氏名(カナ)を設定してください', CakeSession::read('Message.alert-error.message'));
-        $this->assertContains('社員番号を設定してください。', CakeSession::read('Message.alert-error.message'));
-        $this->assertContains('メールアドレスはメールアドレス形式で設定してください。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('ユーザIDを設定してください。', serialize(CakeSession::read('Message.alert-error')));
+        $this->assertContains('氏名を設定してください。', serialize(CakeSession::read('Message.alert-error')));
+        $this->assertContains('氏名(カナ)を設定してください', serialize(CakeSession::read('Message.alert-error')));
+        $this->assertContains('社員番号を設定してください。', serialize(CakeSession::read('Message.alert-error')));
+        $this->assertContains('メールアドレスはメールアドレス形式で設定してください。', serialize(CakeSession::read('Message.alert-error')));
 
         // [準備]
         CakeSession::write('CMN2000', ['Users' => [],'1234' => $user]);
@@ -294,8 +294,8 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
-        $this->assertContains('ユーザIDはアルファベットまたは数字のみで設定してください。', CakeSession::read('Message.alert-error.message'));
-        $this->assertContains('社員番号は数字のみで設定してください。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('ユーザIDはアルファベットまたは数字のみで設定してください。', serialize(CakeSession::read('Message.alert-error')));
+        $this->assertContains('社員番号は数字のみで設定してください。', serialize(CakeSession::read('Message.alert-error')));
 
         // [準備]
         CakeSession::write('CMN2000', ['Users' => [],'1234' => $user]);
@@ -313,7 +313,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
-        $this->assertContains('ユーザIDは8文字以上32文字以下で設定してください。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('ユーザIDは8文字以上32文字以下で設定してください。',serialize( CakeSession::read('Message.alert-error')));
 
         // [準備]
         CakeSession::write('CMN2000', ['Users' => [],'1234' => $user]);
@@ -330,7 +330,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
-        $this->assertContains('ユーザIDは8文字以上32文字以下で設定してください。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('ユーザIDは8文字以上32文字以下で設定してください。', serialize(CakeSession::read('Message.alert-error')));
 
         // [準備]
         CakeSession::write('CMN2000', ['Users' => [],'1111' => $user]);
@@ -347,7 +347,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('登録しました。', CakeSession::read('Message.alert-success.message'));
+        $this->assertContains('登録しました。', serialize(CakeSession::read('Message.alert-success')));
 
         // [準備]
         CakeSession::write('CMN2000', ['Users' => [],'2222' => $user]);
@@ -364,7 +364,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('登録しました。', CakeSession::read('Message.alert-success.message'));
+        $this->assertContains('登録しました。', serialize(CakeSession::read('Message.alert-success')));
     }
 
     public function test_insertは入力に誤りがある場合にSessionのユーザ情報を入力値で更新すること()
@@ -435,7 +435,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
-        $this->assertContains('ユーザIDが重複しています。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('ユーザIDが重複しています。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_insertは登録しようとしたユーザIDが削除ユーザとしてテーブルに存在する場合にエラーメッセージをViewに設定しadduser画面に遷移すること()
@@ -466,7 +466,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
-        $this->assertContains('削除されたユーザとユーザIDが重複しています。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('削除されたユーザとユーザIDが重複しています。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_insertはテーブルの登録に失敗した場合にエラーメッセージをViewに設定しadduser画面に遷移すること()
@@ -505,7 +505,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000/adduser/id:1234', $this->headers['Location']);
-        $this->assertContains('予期せぬエラーが発生しました。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('予期せぬエラーが発生しました。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_insertは入力値をテーブルに登録すること()
@@ -543,7 +543,7 @@ class CMN2000ControllerTest extends ControllerTestCase
         $this->assertEquals($userOfDb['User']['EMPLOYEE_NUM'], '1234');
         $this->assertEquals($userOfDb['User']['MAIL_ADDRESS'], 'test@example.com');
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('登録しました。', CakeSession::read('Message.alert-success.message'));
+        $this->assertContains('登録しました。', serialize(CakeSession::read('Message.alert-success')));
     }
 
     public function test_editは未ログインの場合にログイン画面を表示すること()
@@ -673,7 +673,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('予期しないエラーが発生しました。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('予期しないエラーが発生しました。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_updateは未ログインの場合にログイン画面を表示すること()
@@ -731,7 +731,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('更新対象のユーザは削除されています。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('更新対象のユーザは削除されています。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_updateは更新しようとしたユーザIDが更新されている場合にエラーメッセージをViewに設定しindex画面に遷移すること()
@@ -756,7 +756,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('更新対象のユーザは更新されているため変更できません。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('更新対象のユーザは更新されているため変更できません。', serialize(CakeSession::read('Message.alert-error')));
 
         // [準備]
         $user = [
@@ -778,7 +778,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('更新対象のユーザは更新されているため変更できません。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('更新対象のユーザは更新されているため変更できません。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_updateは入力に誤りがある場合にエラーメッセージをViewに設定しedituser画面に遷移すること()
@@ -800,10 +800,10 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000/edituser/id:1234', $this->headers['Location']);
-        $this->assertContains('氏名を設定してください。', CakeSession::read('Message.alert-error.message'));
-        $this->assertContains('氏名(カナ)を設定してください', CakeSession::read('Message.alert-error.message'));
-        $this->assertContains('社員番号を設定してください。', CakeSession::read('Message.alert-error.message'));
-        $this->assertContains('メールアドレスはメールアドレス形式で設定してください。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('氏名を設定してください。', serialize(CakeSession::read('Message.alert-error')));
+        $this->assertContains('氏名(カナ)を設定してください', serialize(CakeSession::read('Message.alert-error')));
+        $this->assertContains('社員番号を設定してください。', serialize(CakeSession::read('Message.alert-error')));
+        $this->assertContains('メールアドレスはメールアドレス形式で設定してください。', serialize(CakeSession::read('Message.alert-error')));
 
         // [準備]
         CakeSession::write('CMN2000', ['Users' => [],'1234' => $user]);
@@ -820,7 +820,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000/edituser/id:1234', $this->headers['Location']);
-        $this->assertContains('社員番号は数字のみで設定してください。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('社員番号は数字のみで設定してください。', serialize(CakeSession::read('Message.alert-error')));
 
         // [準備]
         CakeSession::write('CMN2000', ['Users' => [],'1111' => $user]);
@@ -837,7 +837,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('更新しました。', CakeSession::read('Message.alert-success.message'));
+        $this->assertContains('更新しました。', serialize(CakeSession::read('Message.alert-success')));
     }
 
     public function test_updateは入力に誤りがある場合にSessionのユーザ情報を入力値で更新すること()
@@ -896,7 +896,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000/edituser/id:1234', $this->headers['Location']);
-        $this->assertContains('予期せぬエラーが発生しました。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('予期せぬエラーが発生しました。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_updateは入力値でテーブルを更新すること()
@@ -927,7 +927,7 @@ class CMN2000ControllerTest extends ControllerTestCase
         $this->assertEquals($userOfDb['User']['ROW_NUM'], 1);
         $this->assertEquals($userOfDb['User']['REVISION'], 2);
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('更新しました。', CakeSession::read('Message.alert-success.message'));
+        $this->assertContains('更新しました。', serialize(CakeSession::read('Message.alert-success')));
 
         //ToDo:更新日時の確認をすること
     }
@@ -967,7 +967,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('削除対象のユーザは存在しません。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('削除対象のユーザは存在しません。',serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_deleteは削除しようとしたユーザIDがSessionに存在しない場合にエラーメッセージをViewに設定しindex画面に遷移すること()
@@ -980,7 +980,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('削除対象のユーザは存在しません。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('削除対象のユーザは存在しません。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_deleteは削除しようとしたユーザIDが更新されている場合にエラーメッセージをViewに設定しindex画面に遷移すること()
@@ -999,7 +999,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('削除対象ユーザは更新されているため削除できません。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('削除対象ユーザは更新されているため削除できません。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_deleteはテーブルの更新に失敗した場合にエラーメッセージをViewに設定しindex画面に遷移すること()
@@ -1021,7 +1021,7 @@ class CMN2000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('予期せぬエラーが発生しました。', CakeSession::read('Message.alert-error.message'));
+        $this->assertContains('予期せぬエラーが発生しました。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_deleteは対象ユーザをテーブルから削除すること()
@@ -1067,6 +1067,6 @@ class CMN2000ControllerTest extends ControllerTestCase
         $this->assertEquals($userOfDb['User']['STATE'], 0);
 
         $this->assertStringEndsWith('/CMN2000', $this->headers['Location']);
-        $this->assertContains('削除しました。', CakeSession::read('Message.alert-success.message'));
+        $this->assertContains('削除しました。', serialize(CakeSession::read('Message.alert-success')));
     }
 }

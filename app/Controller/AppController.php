@@ -39,32 +39,31 @@ class AppController extends Controller {
 	                   'Paginator' => ['className' => 'TwitterBootstrap.BootstrapPaginator']];
 	public $layout = 'bootstrap';
 
+	public $messages = [];
+
 	public function setAlertMessage($message, $type) {
 		// $type : error or success or notice
 
-		$messageText = $this->getMessageText($message);
+		$this->addMessages($message, $type);
 
-		if ($this->Session->check('Message.alert-' . $type)) {
-		 	$this->Session->setFlash($this->Session->read('Message.alert-' . $type)['message'] . "\n" . $messageText, 'flash_' . $type, [], 'alert-' . $type);
-		} else {
-			$this->Session->setFlash($messageText, 'flash_' . $type, [], 'alert-' . $type);
-		}
+		$this->Session->delete('Message.alert-' . $type);
+		$this->Session->setFlash(join("\n", $this->messages[$type]), 'flash_' . $type, [], 'alert-' . $type);
 	}
 
-	public function getMessageText($message) {
-		$result = '';
-		$delimiter = '';
+	public function addMessages($message, $type) {
+		$messages = [];
+
+		if (!array_key_exists($type, $this->messages)) {
+			$this->messages = array_merge($this->messages, [$type => []]);
+		}
 
 		if (is_array($message)) {
 			foreach($message as $it) {
-				$result = $result . $delimiter . $this->getMessageText($it);
-				$delimiter = "\n";
+				$this->addMessages($it, $type);
 			}
 		} else {
-			$result = $message;
+			array_push($this->messages[$type], $message);
 		}
-
-		return $result;
 	}
 
 	public function logined() {

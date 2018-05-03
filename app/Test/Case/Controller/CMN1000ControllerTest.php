@@ -143,8 +143,7 @@ class CMN1000ControllerTest extends ControllerTestCase
 
         // [確認]
         $this->assertStringEndsWith('/CMN1000', $this->headers['Location']);
-        $this->assertContains(CakeSession::read('Message.alert-error'), 'error');
-        $this->assertContains('ログインできません。ユーザＩＤ、パスワードを確認してください。', CakeSession::read('Message.alert-error'));
+        $this->assertContains('ログインできません。ユーザＩＤ、パスワードを確認してください。', serialize(CakeSession::read('Message.alert-error')));
     }
 
     public function test_logoutはセッションのログイン情報を削除しインデックスに遷移すること()
