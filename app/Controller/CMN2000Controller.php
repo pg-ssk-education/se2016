@@ -276,15 +276,15 @@ class CMN2000Controller extends AppController
             }
 
             $userOfDb['User'] = array_replace($userOfDb['User'], [
-            'NAME'         => $user['User']['NAME'],
-            'NAME_KANA'    => $user['User']['NAME_KANA'],
-            'COMMENT'      => $user['User']['COMMENT'],
-            'EMPLOYEE_NUM' => $user['User']['EMPLOYEE_NUM'],
-            'MAIL_ADDRESS' => $user['User']['MAIL_ADDRESS'],
-            'UPD_DATETIME' => DboSource::expression('NOW()'),
-            'UPD_USER_ID'  => $this->Session->read('loginUserId'),
-            'REVISION'     => $userOfDb['User']['REVISION'] + 1
-        ]);
+                'NAME'         => $user['User']['NAME'],
+                'NAME_KANA'    => $user['User']['NAME_KANA'],
+                'COMMENT'      => $user['User']['COMMENT'],
+                'EMPLOYEE_NUM' => $user['User']['EMPLOYEE_NUM'],
+                'MAIL_ADDRESS' => $user['User']['MAIL_ADDRESS'],
+                'UPD_DATETIME' => DboSource::expression('NOW()'),
+                'UPD_USER_ID'  => $this->Session->read('loginUserId'),
+                'REVISION'     => $userOfDb['User']['REVISION'] + 1
+            ]);
 
             if (!$this->saveUser($userOfDb)) {
                 $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');

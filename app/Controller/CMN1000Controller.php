@@ -3,6 +3,19 @@ class CMN1000Controller extends AppController
 {
     public $helpers = ['Html', 'Form'];
     public $uses = ['Notification', 'User', 'InvalidAccess'];
+    public $components = ['Security'];
+
+    public function beforeFilter()
+    {
+        $this->Security->requirePost(['login']);
+        $this->Security->blackHoleCallback = 'blackhole';
+    }
+
+    public function blackhole($type)
+    {
+        $this->setAlertMessage('予期しないエラーが発生しました。', 'error');
+        $this->redirect(['controller' => 'CMN1000', 'action' => 'index']);
+    }
 
     public function root()
     {
@@ -11,58 +24,41 @@ class CMN1000Controller extends AppController
 
     public function index()
     {
-        // すでにログイン済みの場合はトップページへ遷移
-        if ($this->Session->check('loginUserId')) {
+        if ($this->logined()) {
             $this->redirect(['controller' => 'CMN1010', 'action' => 'index']);
             return;
         }
 
         $this->set('title_for_layout', 'ログイン');
-        $this->set(
-            'notifications',
-            $this->Notification->findAllByTargetUserId('', null, ['Notification.UPD_DATETIME' => 'desc'])
-        );
-        $this->set(
-            'invalidAccessCount',
-            $this->InvalidAccess->findCountByClientIpOnLastOneMinute($this->getClientIp())
-        );
+        $this->set('notifications', $this->Notification->findAllByTargetUserId(''));
+        $this->set('invalidAccessCount', $this->InvalidAccess->findCountByClientIpWithinLastOneMinute($this->getClientIp()));
     }
 
     public function login()
     {
-        if ($this->request->is('post')) {
-            // 不用データが蓄積されないよう、1分以上前の不正アクセスはクリア
-            $this->InvalidAccess->deleteOverOneMinute();
+        $this->InvalidAccess->deleteOverOneMinute();
 
-            $user = $this->User->findByUserIdAndPassword(
+        $user = $this->User->findByUserIdAndPassword(
                 $this->request->data('txtLoginId'),
                 $this->request->data('txtPassword')
-            );
-            if (empty($user)) {
-                $this->InvalidAccess->saveClientIp($this->getClientIp());
-                parent::setAlertMessage('ログインできません。ユーザＩＤ、パスワードを確認してください。', 'error');
-                $this->redirect(['controller' => 'CMN1000', 'action' => 'index']);
-                return;
-            }
-
-            $this->InvalidAccess->deleteAll(
-                ['InvalidAccess.CLIENT_IP' => $this->getClientIp()],
-                false
-            );
-
-            // ログイン処理
-            $this->Session->write('loginUserId', $this->request->data('txtLoginId'));
-
-            $this->redirect(['controller' => 'CMN1010', 'action' => 'index']);
+        );
+        if (empty($user)) {
+            $this->InvalidAccess->saveClientIp($this->getClientIp());
+            $this->setAlertMessage('ログインできません。ユーザＩＤ、パスワードを確認してください。', 'error');
+            $this->redirect(['controller' => 'CMN1000', 'action' => 'index']);
             return;
         }
 
-        $this->redirect(['controller' => 'CMN1000', 'action' => 'index']);
+        $this->InvalidAccess->deleteAllByClientIp($this->getClientIp());
+        $this->Session->write('loginUserId', $this->request->data('txtLoginId'));
+
+        $this->redirect(['controller' => 'CMN1010', 'action' => 'index']);
     }
 
     public function logout()
     {
-        $this->Session->delete('loginUserId');
+        $this->Session->destroy();
+//        $this->Session->delete('loginUserId');
         $this->redirect(['controller' => 'CMN1000', 'action' => 'index']);
     }
 

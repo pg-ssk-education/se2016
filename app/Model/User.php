@@ -52,10 +52,14 @@ class User extends AppModel
 
     public function findAll()
     {
-        return $this->find('all', [
+        $users = $this->find('all', [
             'conditions' => ['User.STATE'   => 0],
             'order'      => ['User.USER_ID' => 'asc']
         ]);
+
+        $this->log($this->getDataSource()->getLog(), LOG_INFO);
+
+        return $users;
     }
 
     public function findByUserIdAndPassword($userId, $password)
@@ -65,7 +69,11 @@ class User extends AppModel
             'User.PASSWORD' => Security::hash($password, 'sha256', true),
             'User.STATE'    => 0
         ];
-        return $this->find('first', ['conditions' => $conditions]);
+        $user = $this->find('first', ['conditions' => $conditions]);
+
+        $this->log($this->getDataSource()->getLog(), LOG_INFO);
+
+        return $user;
     }
 
     public function findByUserId($userId)
@@ -74,7 +82,11 @@ class User extends AppModel
             'User.USER_ID' => $userId,
             'User.STATE'   => 0
         ];
-        return $this->find('first', ['conditions' => $conditions]);
+        $user =  $this->find('first', ['conditions' => $conditions]);
+
+        $this->log($this->getDataSource()->getLog(), LOG_INFO);
+
+        return $user;
     }
     public function findDeletedByUserId($userId)
     {
@@ -82,6 +94,10 @@ class User extends AppModel
             'User.USER_ID' => $userId,
             'User.STATE'   => 1
         ];
-        return $this->find('first', ['conditions' => $conditions]);
+        $user =  $this->find('first', ['conditions' => $conditions]);
+
+        $this->log($this->getDataSource()->getLog(), LOG_INFO);
+
+        return $user;
     }
 }
