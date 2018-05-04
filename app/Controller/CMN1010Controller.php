@@ -1,13 +1,16 @@
 <?php
-class CMN1010Controller extends AppController {
+class CMN1010Controller extends AppController
+{
+    public $helpers = ['Html', 'Form'];
+    public $uses = ['Notification'];
 
-	public $helpers = ['Html', 'Form'];
-	public $uses = ['Notification'];
+    public function index()
+    {
+        if (!$this->checkLogin()) {
+            return;
+        }
 
-	public function index() {
-		parent::checkLogin();
-		$this->set('title_for_layout', 'トップ');
-		$userId = $this->Session->read('loginUserId');
-		$this->set('notifications', $this->Notification->findAllByUserId($userId));
-	}
+        $this->set('title_for_layout', 'トップ');
+        $this->set('notifications', $this->Notification->findAllByTargetUserId($this->Session->read('loginUserId')));
+    }
 }
