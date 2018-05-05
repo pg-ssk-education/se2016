@@ -52,14 +52,12 @@ class User extends AppModel
 
     public function findAll()
     {
-        $users = $this->find('all', [
+        $result = $this->find('all', [
             'conditions' => ['User.STATE'   => 0],
             'order'      => ['User.USER_ID' => 'asc']
         ]);
-
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
-
-        return $users;
+        return $result;
     }
 
     public function findByUserIdAndPassword($userId, $password)
@@ -69,35 +67,40 @@ class User extends AppModel
             'User.PASSWORD' => Security::hash($password, 'sha256', true),
             'User.STATE'    => 0
         ];
-        $user = $this->find('first', ['conditions' => $conditions]);
 
+        $result = $this->find('first', ['conditions' => $conditions]);
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
-
-        return $user;
+        return $result;
     }
 
-    public function findByUserId($userId)
+    public function findByUserId($userId, $forUpdate = false)
     {
         $conditions = [
             'User.USER_ID' => $userId,
             'User.STATE'   => 0
         ];
-        $user =  $this->find('first', ['conditions' => $conditions]);
 
+        $result =  $this->find('first', ['conditions' => $conditions, 'lock' => $forUpdate]);
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
-
-        return $user;
+        return $result;
     }
+
     public function findDeletedByUserId($userId)
     {
         $conditions = [
             'User.USER_ID' => $userId,
             'User.STATE'   => 1
         ];
-        $user =  $this->find('first', ['conditions' => $conditions]);
 
+        $result =  $this->find('first', ['conditions' => $conditions]);
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
+        return $result;
+    }
 
-        return $user;
+    public function save($data = null, $validate = true, $fieldList = [])
+    {
+        $result = parent::save($data, $validate, $fieldList);
+        $this->log($this->getDataSource()->getLog(), LOG_INFO);
+        return $result;
     }
 }

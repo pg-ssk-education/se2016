@@ -101,8 +101,8 @@ class CMN2000Controller extends AppController
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
             return;
         }
-
         $token = $this->params['named']['id'];
+
         $session = $this->Session->read('CMN2000');
         if ($session == null) {
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
@@ -165,9 +165,9 @@ class CMN2000Controller extends AppController
         $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
     }
 
-    public function saveUser($user, $validate=true)
+    public function saveUser($user)
     {
-        return $this->User->save($user, $validate);
+        return $this->User->save($user, false);
     }
 
     public function edit()
@@ -255,7 +255,7 @@ class CMN2000Controller extends AppController
         try {
             $this->TransactionManager->begin();
 
-            $userOfDb = $this->User->findByUserId($user['User']['USER_ID']);
+            $userOfDb = $this->User->findByUserId($user['User']['USER_ID'], true);
             if ($userOfDb == null) {
                 $this->setAlertMessage('更新対象のユーザは削除されています。', 'error');
                 $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
@@ -281,7 +281,7 @@ class CMN2000Controller extends AppController
                 'COMMENT'      => $user['User']['COMMENT'],
                 'EMPLOYEE_NUM' => $user['User']['EMPLOYEE_NUM'],
                 'MAIL_ADDRESS' => $user['User']['MAIL_ADDRESS'],
-                'UPD_DATETIME' => DboSource::expression('NOW()'),
+                'UPD_DATETIME' => $this->getNow(),
                 'UPD_USER_ID'  => $this->Session->read('loginUserId'),
                 'REVISION'     => $userOfDb['User']['REVISION'] + 1
             ]);
@@ -314,23 +314,18 @@ class CMN2000Controller extends AppController
             $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
             return;
         }
-
         $userId = $this->params['named']['id'];
-        if ($userId == null) {
-            $this->setAlertMessage('削除対象のユーザが指定されていません。', 'error');
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            return;
-        }
 
         try {
             $this->TransactionManager->begin();
 
-            $userOfDb = $this->User->findByUserId($userId);
+            $userOfDb = $this->User->findByUserId($userId, true);
             if ($userId == null) {
                 $this->setAlertMessage('削除対象のユーザは存在しません。', 'error');
                 $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
                 throw new Exception();
             }
+
             $userOfSession = $this->getUserFromSession($userId);
             if ($userOfSession == null) {
                 $this->setAlertMessage('削除対象のユーザは存在しません。', 'error');
@@ -345,12 +340,13 @@ class CMN2000Controller extends AppController
             }
 
             $userOfDb['User'] = array_replace($userOfDb['User'], [
-            'STATE'        => 1,
-            'UPD_DATETIME' => date('Y-m-d H:i:s'),
-            'UPD_USER_ID'  => $this->Session->read('loginUserId'),
-            'REVISION'     => $userOfDb['User']['REVISION'] + 1
-        ]);
-            if (!$this->saveUser($userOfDb, false)) {
+                'STATE'        => 1,
+                'UPD_DATETIME' => $this->getNow(),
+                'UPD_USER_ID'  => $this->Session->read('loginUserId'),
+                'REVISION'     => $userOfDb['User']['REVISION'] + 1
+            ]);
+
+            if (!$this->saveUser($userOfDb)) {
                 $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
                 $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
                 throw new Exception();
@@ -375,5 +371,10 @@ class CMN2000Controller extends AppController
             }
         }
         return null;
+    }
+
+    public function getNow()
+    {
+        return date('Y-m-d H:i:s');
     }
 }

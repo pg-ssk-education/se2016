@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <?php
-        echo $this->Html->css(['cmn', 'bootstrap.min', 'bootstrap-responsive.min', 'jquery.dataTables.min']);
+        echo $this->Html->css(['cmn', 'bootstrap', 'bootstrap-responsive', 'jquery.dataTables.min']);
         echo $this->fetch('meta');
         echo $this->fetch('css');
         ?>
