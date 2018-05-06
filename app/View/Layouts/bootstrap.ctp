@@ -23,7 +23,10 @@
                 <?php if ($this->Session->check('loginUserId')): ?>
                     <ul class="nav">
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown">メニュー<span class="caret"></span></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                メニュー
+                                <span class="caret"></span>
+                            </a>
                             <ul class="dropdown-menu">
                                 <li><?php echo $this->Html->link('ユーザ管理', '/CMN2000/index', []) ?></li>
                             </ul>
@@ -31,7 +34,11 @@
                     </ul>
                     <ul class="nav pull-right">
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown"><?php echo h($this->Session->read('loginUserId')); ?><span class="caret"></span></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="icon-user"></span>
+                                <?php echo h($this->Session->read('loginUserId')); ?>
+                                <span class="caret"></span>
+                            </a>
                             <ul class="dropdown-menu">
                                 <!--<li><a href="google.co.jp">個別設定</a></li>-->
                                 <li><?php echo $this->Html->link('ログアウト', '/CMN1000/logout', []) ?></li>
