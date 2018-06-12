@@ -4,7 +4,7 @@ echo $this->Html->script('CMN1000.js', ['inline' => false]);
 
 // ログインを3回失敗するとログイン画面を1分間ロックする
 if (isset($invalidAccessCount) && $invalidAccessCount >= 3) {
-	return;
+    return;
 }
 
 echo $this->Form->create(false, ['url' => ['controller' => 'CMN1000', 'action' => 'login']]);
@@ -33,7 +33,7 @@ echo $this->Form->create(false, ['url' => ['controller' => 'CMN1000', 'action' =
 </div>
 <div class="page-block">
 	<?php echo $this->Form->button('ログイン', ['type' => 'submit', 'class' => 'btn btn-primary', 'div' => false]); ?>
-	<?php //echo $this->Html->link('パスワード再設定', ['class' => 'disabled', 'controller' => 'CMN1020', 'action' => 'index']); ?>
+	<?php //echo $this->Html->link('パスワード再設定', ['class' => 'disabled', 'controller' => 'CMN1020', 'action' => 'index']);?>
 </div>
 <?php if (!empty($notifications)): ?>
 	<table class="table table-striped" id="notifications">
