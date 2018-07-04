@@ -16,6 +16,10 @@ $(document).ready(function() {
                 "sNext":     "次",
                 "sLast":     "最終"
             }
-        } 
+        }
     });
+    
+    // bootstrap4のdropdownが2回クリックしないと開かないため、画面表示時に一回クリックしておく。(バージョンアップまでの暫定対応)
+    $('.dropdown-toggle').click();
+    $('.dropdown-toggle').blur();
 });

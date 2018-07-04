@@ -1,12 +1,12 @@
 <?php
-class CMN1010Controller extends AppController
+class FNC1010Controller extends AppController
 {
     public $helpers = ['Html', 'Form'];
     public $uses = ['Notification'];
 
     public function index()
     {
-        if (!$this->checkLogin()) {
+        if (!$this->checkLoggedIn()) {
             return;
         }
 

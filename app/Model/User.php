@@ -60,17 +60,22 @@ class User extends AppModel
         return $result;
     }
 
-    public function findByUserIdAndPassword($userId, $password)
+    public function findByUserIdAndEncryptedPassword($userId, $encryptedPassword)
     {
         $conditions = [
             'User.USER_ID'  => $userId,
-            'User.PASSWORD' => Security::hash($password, 'sha256', true),
+            'User.PASSWORD' => $encryptedPassword,
             'User.STATE'    => 0
         ];
-
         $result = $this->find('first', ['conditions' => $conditions]);
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
         return $result;
+    }
+
+    public function findByUserIdAndUnencryptedPassword($userId, $unencryptedPassword)
+    {
+        $encryptedPassword = Security::hash($unencryptedPassword, 'sha256', true);
+        return $this->findByUserIdAndEncryptedPassword($userId, $encryptedPassword);
     }
 
     public function findByUserId($userId, $forUpdate = false)
@@ -79,19 +84,16 @@ class User extends AppModel
             'User.USER_ID' => $userId,
             'User.STATE'   => 0
         ];
-
-        $result =  $this->find('first', ['conditions' => $conditions, 'lock' => $forUpdate]);
+        $result = $this->find('first', ['conditions' => $conditions, 'lock' => $forUpdate]);
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
         return $result;
     }
 
-    public function findDeletedByUserId($userId)
+    public function findByUserIdWithoutState($userId)
     {
         $conditions = [
-            'User.USER_ID' => $userId,
-            'User.STATE'   => 1
+            'User.USER_ID' => $userId
         ];
-
         $result =  $this->find('first', ['conditions' => $conditions]);
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
         return $result;

@@ -33,6 +33,7 @@ App::uses('Controller', 'Controller');
 class AppController extends Controller
 {
     public $components = ['DebugKit.Toolbar', 'Session'];
+    public $uses = ['User'];
 
     public $helpers = [
         'Session',
@@ -40,7 +41,7 @@ class AppController extends Controller
         'Form' => ['className' => 'TwitterBootstrap.BootstrapForm'],
         'Paginator' => ['className' => 'TwitterBootstrap.BootstrapPaginator']
     ];
-    public $layout = 'bootstrap';
+    public $layout = 'bootstrap4';
 
     public $messages = [];
 
@@ -71,23 +72,36 @@ class AppController extends Controller
         }
     }
 
-    public function logined()
+    public function loggedIn()
     {
         if (isset($this->Session)) {
-            $loginUserId = $this->Session->read('loginUserId');
-            if (isset($loginUserId)) {
+            if ($this->Session->check('loginUserId')) {
                 return true;
             }
         }
         return false;
     }
 
-    public function checkLogin()
+    public function checkLoggedIn()
     {
-        if ($this->logined()) {
+        if ($this->loggedIn()) {
+            $user = $this->User->findByUserId($this->Session->read('loginUserId'));
+            if (isset($user)) {
+                $this->set('login_user', $user);
+            }
+            //$belongToAdminGroup = false;
+            //$belongingGroups = $this->GroupUser->selectByUserId($user['User']['USER_ID']);
+            //foreach ($belongingGroups as $belongingGroup) {
+            //	if ($belongingGroup['GroupUser']['GROUP_ID'] == 'admin') {
+            //		$belongToAdminGroup = true;
+            //		break;
+            //	}
+            //}
+            //$this->set('belongToAdminGroup', $belongToAdminGroup);
+            $this->set('belong_to_admin_group', true);
             return true;
         }
-        $this->redirect(['controller'=>'CMN1000', 'action'=>'index']);
+        $this->redirect(['controller' => 'FNC1000', 'action' => 'index']);
         return false;
     }
 }

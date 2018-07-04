@@ -3,12 +3,30 @@ body {
     padding-bottom :2.0rem;
 }
 
-.comet-required:after {
+.cmn-required:after {
     content :"(必須)";
     color   :red;
 }
 
-.comet-footer {
+.cmn-footer {
     color            :#807020;
     background-color :#F0E090;
+}
+
+@media screen and (max-width:767px) {
+	.cmn-brand {
+		font-size: 1.0em;
+	}
+}
+
+@media screen and (min-width:768px) and (max-width:991px) {
+	.cmn-brand {
+		font-size: 1.25em;
+	}
+}
+
+@media screen and (min-width:992px) {
+	.cmn-brand {
+		font-size: 1.5em;
+	}
 }
