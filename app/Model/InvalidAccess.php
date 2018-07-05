@@ -31,14 +31,4 @@ class InvalidAccess extends AppModel
 
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
     }
-
-    public function saveClientIp($clientIp)
-    {
-        $this->save(['InvalidAccess' => [
-            'ACCESS_ID' => DboSource::expression('UUID()'),
-            'CLIENT_IP' => $clientIp
-        ]]);
-
-        $this->log($this->getDataSource()->getLog(), LOG_INFO);
-    }
 }

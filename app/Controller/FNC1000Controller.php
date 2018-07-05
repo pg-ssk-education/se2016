@@ -29,28 +29,25 @@ class FNC1000Controller extends AppController
             return;
         }
 
-        $this->restoreInputValueFromSession();
+        $session = $this->Session->read('FNC1000');
+        if (isset($session)) {
+            $this->set('user_id', $session['userId'] ?? '');
+        } else {
+            $this->set('user_id', '');
+        }
 
         $this->set('title_for_layout', 'ログイン');
         $this->set('notifications', $this->Notification->findAllByTargetUserId(''));
         $this->render('index');
     }
 
-    private function restoreInputValueFromSession()
-    {
-        $session = $this->Session->read('FNC1000');
-        if (isset($session)) {
-            $this->set('userId', $session['userId']);
-            $this->set('password', $session['password']);
-        } else {
-            $this->set('userId', '');
-            $this->set('password', '');
-        }
-    }
-
     public function login()
     {
-        $this->storeInputValueToSession();
+        $userId = $this->request->data('txtUserId') ?? '';
+        $unencryptedPassword = $this->request->data('txtPassword') ?? '';
+
+        $session = ['userId' => $userId];
+        $this->Session->write('FNC1000', $session);
 
         $this->InvalidAccess->deleteOverOneMinute();
         $invalidAccessCountWithinLastOneMinute = $this->InvalidAccess->findCountByClientIpWithinLastOneMinute($this->getClientIp());
@@ -59,24 +56,18 @@ class FNC1000Controller extends AppController
             return;
         }
 
-        $user = $this->User->findByUserIdAndUnencryptedPassword($this->request->data('txtUserId'), $this->request->data('txtPassword'));
+        $user = $this->User->findByUserIdAndUnencryptedPassword($userId, $unencryptedPassword);
         if (empty($user)) {
-            $this->InvalidAccess->saveClientIp($this->getClientIp());
+            $this->InvalidAccess->create(['CLIENT_IP' => $this->getClientIp()]);
+            $this->InvalidAccess->save();
             $this->setAlertMessage('ログインできません。ユーザＩＤ、パスワードを確認してください。', 'error');
             $this->redirect(['controller' => 'FNC1000', 'action' => 'index']);
             return;
         }
 
         $this->InvalidAccess->deleteAllByClientIp($this->getClientIp());
-        $this->Session->write('loginUserId', $this->request->data('txtUserId'));
-
+        $this->Session->write('loginUserId', $userId);
         $this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
-    }
-
-    private function storeInputValueToSession()
-    {
-        $session = ['userId' => $this->request->data('txtUserId'), 'password' => $this->request->data('txtPassword')];
-        $this->Session->write('FNC1000', $session);
     }
 
     public function logout()
