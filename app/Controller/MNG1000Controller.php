@@ -62,9 +62,9 @@ class MNG1000Controller extends AppController
 	}
 
 	public function postEdit() {
-		$userId = $this->params['named']['id'];
+		$userId = $this->request->data('txtTargetUserId');
 		if (is_null($userId)) {
-			throw new BadRequestException(sprintf(self::MSG_INVALID_NAMED_PARAMETER, 'ユーザID'));
+			throw new BadRequestException('ユーザIDが未指定です。');
 		}
 
 		$userOfSession = $this->getUserFromSession($userId);
@@ -84,14 +84,15 @@ class MNG1000Controller extends AppController
             'MAIL_ADDRESS' => $userOfSession['User']['MAIL_ADDRESS'],
 		];
 		$this->Session->write(self::FUNCTION_NAME . $token, $targetUser);
-        $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'edit', 't' => $token]);
+        $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'edit', '?' => ['t' => $token]]);
 	}
 
 	public function getEdit() {
-		$token = $this->params['named']['t'];
+		$token = $this->requet->query('t');
 		if (is_null($token)) {
-			throw new BadRequestException(sprintf(self::MSG_INVALID_NAMED_PARAMETER, 'トークン'));
+			throw new BadRequestException('トークンが未指定です。');
 		}
+
 		$targetUser = $this->Session->read(self::FUNCTION_NAME . $token);
 		if (is_null($targetUser)) {
 			$this->setAlertMessage('対象ユーザの編集は完了しています。', 'notice');
@@ -107,10 +108,10 @@ class MNG1000Controller extends AppController
 
     public function delete()
     {
-		$userId = $this->params['named']['id'];
-        if (is_null($userId)) {
-			throw new BadRequestException(sprintf(self::MSG_INVALID_NAMED_PARAMETER, 'ユーザID'));
-        }
+		$userId = $this->request->data('txtTargetUserId');
+		if (is_null($userId)) {
+			throw new BadRequestException('ユーザIDが未指定です。');
+		}
 
 		$userOfSession = $this->getUserFromSession($userId);
 		if (is_null($userOfSession)) {
@@ -148,18 +149,18 @@ class MNG1000Controller extends AppController
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
         }
-		$this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
+		$this->redirect(['action' => 'index']);
     }
 
 	public function insert() {
-		$token = $this->request->query['t'];
+		$token = $this->requet->query('t');
 		if (is_null($token)) {
-			throw new BadRequestException(sprintf(self::MSG_INVALID_NAMED_PARAMETER, 'トークン');
+			throw new BadRequestException('トークンが未指定です。');
 		}
 
 		if (!$this->Session->check(self::FUNCTION_NAME . $token)) {
 			$this->setAlertMessage('対象ユーザの編集は完了しています。', 'notice');
-			$this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
+			$this->redirect(['action' => 'index']);
             return;
 		}
 		$targetUser = $this->Session->read(self::FUNCTION_NAME . $token);
@@ -179,7 +180,7 @@ class MNG1000Controller extends AppController
 		$this->User->set(['User' => $targetUser]);
 		if (!$this->User->validates(['fieldList' => array_keys($inputValue)])) {
 			$this->setAlertMessages($this->User->validationErrors, 'error');
-            $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'edit', 't' => $token]);
+            $this->redirect(['action' => 'edit', '?' => ['t' => $token]]);
             return;
 		}
 
@@ -194,10 +195,10 @@ class MNG1000Controller extends AppController
             $this->TransactionManager->commit();
 			$this->setAlertMessage(sprintf('%sを登録しました。',$userOfDb['User']['USER_NAME']), 'success');
 			$this->Session->delete(self::FUNCTION_NAME . $token);
-			$this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
+			$this->redirect(['action' => 'index']);
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-			$this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'edit', 't' => $token]);
+			$this->redirect(['action' => 'edit', '?' => ['t' => $token]]);
         }
 	}
 
