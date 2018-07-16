@@ -110,7 +110,7 @@ class User extends AppModel
 		if (isset($data['ID'])) {
 		} else {
 			$data['INS_DATETIME'] = date('Y-m-d H:i:s');
-			$data['INS_USER_ID']  = $this->Session->read('loginUserId') ?? '';
+			$data['INS_USER_ID']  = $this->Session->read('loginUserId') ?: '';
 			$data['REVISION']     = 1;
 		}
 	}

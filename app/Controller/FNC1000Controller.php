@@ -5,8 +5,6 @@ class FNC1000Controller extends AppController
     public $uses = ['Notification', 'User', 'InvalidAccess'];
     public $components = ['Security'];
 
-	private const FUNCTION_NAME = 'FNC1000';
-
     public function beforeFilter()
     {
         $this->Security->requirePost(['login']);
@@ -35,8 +33,8 @@ class FNC1000Controller extends AppController
 		}
 
 		// restore input value from session.
-		if ($this->Session->check(self::FUNCTION_NAME . 'userId')) {
-            $this->set('user_id', $this->Session->check(self::FUNCTION_NAME . 'userId'));
+		if ($this->Session->check('FNC1000' . 'userId')) {
+            $this->set('user_id', $this->Session->check('FNC1000' . 'userId'));
         } else {
             $this->set('user_id', '');
         }
@@ -56,10 +54,10 @@ class FNC1000Controller extends AppController
 			}
 		}
 
-        $userId = $this->request->data('txtUserId') ?? '';
-        $unencryptedPassword = $this->request->data('txtPassword') ?? '';
+        $userId = $this->request->data('txtUserId') ?: '';
+        $unencryptedPassword = $this->request->data('txtPassword') ?: '';
 
-        $this->Session->write(self::FUNCTION_NAME . 'userId', $userId);
+        $this->Session->write('FNC1000' . 'userId', $userId);
 
         $this->InvalidAccess->deleteOverOneMinute();
         $invalidAccessCountWithinLastOneMinute = $this->InvalidAccess->findCountByClientIpWithinLastOneMinute($this->getClientIp());
