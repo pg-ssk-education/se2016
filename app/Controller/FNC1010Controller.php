@@ -6,7 +6,7 @@ class FNC1010Controller extends AppController
 
     public function index()
     {
-        if (!$this->checkLoggedIn()) {
+        if (!$this->checkAuth()) {
             return;
         }
 

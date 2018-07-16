@@ -59,16 +59,6 @@ class AppController extends Controller
 		$this->setAlertMessage(join("\n", $messages));
 	}
 
-    public function loggedIn()
-    {
-        if (isset($this->Session)) {
-            if ($this->Session->check('loginUserId')) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 	public function checkAuth($onlyAdminUser = false) {
 		$loginUserId = null;
 		if (isset($this->Session)) {

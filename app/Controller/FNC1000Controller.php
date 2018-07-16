@@ -5,6 +5,8 @@ class FNC1000Controller extends AppController
     public $uses = ['Notification', 'User', 'InvalidAccess'];
     public $components = ['Security'];
 
+	private const FUNCTION_NAME = 'FNC1000';
+
     public function beforeFilter()
     {
         $this->Security->requirePost(['login']);
@@ -14,24 +16,27 @@ class FNC1000Controller extends AppController
     public function blackhole($type)
     {
         $this->setAlertMessage('予期しないエラーが発生しました。', 'error');
-        $this->redirect(['controller' => 'FNC1000', 'action' => 'index']);
+        $this->redirect(['action' => 'index']);
     }
 
     public function root()
     {
-        $this->redirect(['controller' => 'FNC1000', 'action' => 'index']);
+        $this->redirect(['action' => 'index']);
     }
 
     public function index()
     {
-        if ($this->loggedIn()) {
-            $this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
-            return;
-        }
+		// if the user has logged in, redirects to top page.
+		if (isset($this->Session)) {
+			if ($this->Session->check('loginUserId')) {
+				$this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
+				return;
+			}
+		}
 
-        $session = $this->Session->read('FNC1000');
-        if (isset($session)) {
-            $this->set('user_id', $session['userId'] ?? '');
+		// restore input value from session.
+		if ($this->Session->check(self::FUNCTION_NAME . 'userId')) {
+            $this->set('user_id', $this->Session->check(self::FUNCTION_NAME . 'userId'));
         } else {
             $this->set('user_id', '');
         }
@@ -43,16 +48,23 @@ class FNC1000Controller extends AppController
 
     public function login()
     {
+		// if the user has logged in, redirects to top page.
+		if (isset($this->Session)) {
+			if ($this->Session->check('loginUserId')) {
+				$this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
+				return;
+			}
+		}
+
         $userId = $this->request->data('txtUserId') ?? '';
         $unencryptedPassword = $this->request->data('txtPassword') ?? '';
 
-        $session = ['userId' => $userId];
-        $this->Session->write('FNC1000', $session);
+        $this->Session->write(self::FUNCTION_NAME . 'userId', $userId);
 
         $this->InvalidAccess->deleteOverOneMinute();
         $invalidAccessCountWithinLastOneMinute = $this->InvalidAccess->findCountByClientIpWithinLastOneMinute($this->getClientIp());
         if ($invalidAccessCountWithinLastOneMinute >= 3) {
-            $this->redirect(['controller' => 'FNC1000', 'action' => 'index']);
+            $this->redirect(['action' => 'index']);
             return;
         }
 
@@ -61,7 +73,7 @@ class FNC1000Controller extends AppController
             $this->InvalidAccess->create(['CLIENT_IP' => $this->getClientIp()]);
             $this->InvalidAccess->save();
             $this->setAlertMessage('ログインできません。ユーザＩＤ、パスワードを確認してください。', 'error');
-            $this->redirect(['controller' => 'FNC1000', 'action' => 'index']);
+            $this->redirect(['action' => 'index']);
             return;
         }
 
@@ -73,7 +85,7 @@ class FNC1000Controller extends AppController
     public function logout()
     {
         $this->Session->destroy();
-        $this->redirect(['controller' => 'FNC1000', 'action' => 'index']);
+        $this->redirect(['action' => 'index']);
     }
 
     public function getClientIp()
