@@ -13,6 +13,10 @@ class MNG1000Controller extends AppController
     {
         $this->Security->requirePost(['add', 'delete', 'insert', 'update', 'cancel']);
         $this->Security->blackHoleCallback = 'blackhole';
+
+		if (!$this->checkAuth(true)) {
+            return;
+        }
     }
 
     public function blackhole($type)
@@ -23,10 +27,6 @@ class MNG1000Controller extends AppController
 
     public function index()
     {
-        if (!$this->checkAuth(true)) {
-            return;
-        }
-
         $users = $this->User->findAll();
 		$this->Session->write(self::FUNCTION_NAME . 'users', $users);
 
@@ -37,10 +37,6 @@ class MNG1000Controller extends AppController
 
     public function add()
     {
-		if (!$this->checkAuth(true)) {
-            return;
-        }
-
         $token = $this->getNewToken();
 		$emptyUser = [
 			'ID'           => null,
@@ -58,10 +54,6 @@ class MNG1000Controller extends AppController
 
     public function edit()
     {
-		if (!$this->checkAuth(true)) {
-            return;
-        }
-
         if ($this->request->is('post')) {
             $this->postEdit();
         } else {
@@ -115,10 +107,6 @@ class MNG1000Controller extends AppController
 
     public function delete()
     {
-		if (!$this->checkAuth(true)) {
-            return;
-        }
-
 		$userId = $this->params['named']['id'];
         if (is_null($userId)) {
 			throw new BadRequestException(sprintf(self::MSG_INVALID_NAMED_PARAMETER, 'ユーザID'));
@@ -164,10 +152,6 @@ class MNG1000Controller extends AppController
     }
 
 	public function insert() {
-		if (!$this->checkAuth(true)) {
-			return;
-		}
-
 		$token = $this->request->query['t'];
 		if (is_null($token)) {
 			throw new BadRequestException(sprintf(self::MSG_INVALID_NAMED_PARAMETER, 'トークン');
