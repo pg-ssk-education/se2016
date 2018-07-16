@@ -43,34 +43,21 @@ class AppController extends Controller
     ];
     public $layout = 'bootstrap4';
 
-    public $messages = [];
-
     public function setAlertMessage($message, $type)
     {
         // $type : error, success or notice
-
-        $this->addMessages($message, $type);
-
-        $this->Session->delete('Message.alert-' . $type);
-        $this->Session->setFlash(join("\n", $this->messages[$type]), 'flash_' . $type, [], 'alert-' . $type);
+		if ($this->Session->check('Message.alert-' . $type)) {
+			$old = $this->Session->read('Message.alert-' . $type);
+			$this->Session->delete('Message.alert-' . $type);
+			$this->Session->setFlash($old . "\n", $message, 'flash_' . $type, [], 'alert-' . $type);
+		} else {
+			$this->Session->setFlash($messages, 'flash_' . $type, [], 'alert-' . $type);
+		}
     }
 
-    public function addMessages($message, $type)
-    {
-        $messages = [];
-
-        if (!array_key_exists($type, $this->messages)) {
-            $this->messages = array_merge($this->messages, [$type => []]);
-        }
-
-        if (is_array($message)) {
-            foreach ($message as $it) {
-                $this->addMessages($it, $type);
-            }
-        } else {
-            array_push($this->messages[$type], $message);
-        }
-    }
+	public function setAlertMessages($messages, $type) {
+		$this->setAlertMessage(join("\n", $messages));
+	}
 
     public function loggedIn()
     {
@@ -82,26 +69,43 @@ class AppController extends Controller
         return false;
     }
 
-    public function checkLoggedIn()
-    {
-        if ($this->loggedIn()) {
-            $user = $this->User->findByUserId($this->Session->read('loginUserId'));
-            if (isset($user)) {
-                $this->set('login_user', $user);
-            }
-            //$belongToAdminGroup = false;
-            //$belongingGroups = $this->GroupUser->selectByUserId($user['User']['USER_ID']);
-            //foreach ($belongingGroups as $belongingGroup) {
-            //	if ($belongingGroup['GroupUser']['GROUP_ID'] == 'admin') {
-            //		$belongToAdminGroup = true;
-            //		break;
-            //	}
-            //}
-            //$this->set('belongToAdminGroup', $belongToAdminGroup);
-            $this->set('belong_to_admin_group', true);
-            return true;
-        }
-        $this->redirect(['controller' => 'FNC1000', 'action' => 'index']);
-        return false;
-    }
+	public function checkAuth($onlyAdminUser = false) {
+		$loginUserId = null;
+		if (isset($this->Session)) {
+			if ($this->Session->check('loginUserId')) {
+				$loginUserId = $this->Session->read('loginUserId');
+			}
+		}
+
+		if (is_null($loginUserId)) {
+			$this->redirectToLogin();
+			return false;
+		}
+
+		$loginUser = $this->User->findByUserId($loginUserId);
+		if (is_null($loginUser)) {
+			$this->Session->destroy();
+			$this->redirectToLogin();
+			return false;
+		}
+		$this->set('loginUser', $loginUser)
+
+		if ($onlyAdminUser) {
+			$adminGroupUser = $this->GroupUser->findByGroupIdAndUserId('admin', $loginUserId);
+			if (is_null($adminGroupUser)) {
+				$this->redirectToTop();
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public function redirectToLogin() {
+		$this->redirect(['controller' => 'FNC1000', 'action' => 'index']);
+	}
+
+	public function redirectToTop() {
+		$this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
+	}
 }

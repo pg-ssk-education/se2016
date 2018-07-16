@@ -101,8 +101,17 @@ class User extends AppModel
 
     public function save($data = null, $validate = true, $fieldList = [])
     {
-        $result = parent::save($data, $validate, $fieldList);
+		$result = parent::save($data, $validate, $fieldList);
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
         return $result;
     }
+
+	public function setCommonColumnValue($data) {
+		if (isset($data['ID'])) {
+		} else {
+			$data['INS_DATETIME'] = date('Y-m-d H:i:s');
+			$data['INS_USER_ID']  = $this->Session->read('loginUserId') ?? '';
+			$data['REVISION']     = 1;
+		}
+	}
 }
