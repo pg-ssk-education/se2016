@@ -5,10 +5,6 @@ class MNG1000Controller extends AppController
     public $uses = ['User', 'TransactionManager'];
     public $components = ['Security'];
 
-	private const FUNCTION_NAME = 'MNG1000';
-	private const MSG_INVALID_NAMED_PARAMETER = '名前付きパラメータに%sが設定されていません。';
-
-
     public function beforeFilter()
     {
         $this->Security->requirePost(['add', 'delete', 'insert', 'update', 'cancel']);
@@ -22,13 +18,13 @@ class MNG1000Controller extends AppController
     public function blackhole($type)
     {
         $this->setAlertMessage('予期しないエラーが発生しました。', 'error');
-        $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
+        $this->redirect(['controller' => 'MNG1000', 'action' => 'index']);
     }
 
     public function index()
     {
         $users = $this->User->findAll();
-		$this->Session->write(self::FUNCTION_NAME . 'users', $users);
+		$this->Session->write('MNG1000_users', $users);
 
         $this->set('title_for_layout', 'ユーザ管理:一覧');
         $this->set('users', $users);
@@ -48,8 +44,8 @@ class MNG1000Controller extends AppController
             'EMPLOYEE_NUM' => '',
             'MAIL_ADDRESS' => '',
 		];
-		$this->Session->write(self::FUNCTION_NAME . $token, $emptyUser);
-        $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'edit', '?' => ['t' => $token]]);
+		$this->Session->write('MNG1000_' . $token, $emptyUser);
+        $this->redirect(['action' => 'edit', '?' => ['t' => $token]]);
     }
 
     public function edit()
@@ -83,20 +79,20 @@ class MNG1000Controller extends AppController
             'EMPLOYEE_NUM' => $userOfSession['User']['EMPLOYEE_NUM'],
             'MAIL_ADDRESS' => $userOfSession['User']['MAIL_ADDRESS'],
 		];
-		$this->Session->write(self::FUNCTION_NAME . $token, $targetUser);
-        $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'edit', '?' => ['t' => $token]]);
+		$this->Session->write('MNG1000_' . $token, $targetUser);
+        $this->redirect(['action' => 'edit', '?' => ['t' => $token]]);
 	}
 
 	public function getEdit() {
 		$token = $this->requet->query('t');
 		if (is_null($token)) {
-			throw new BadRequestException('トークンが未指定です。');
+			throw new NotFoundException('トークンが未指定です。');
 		}
 
-		$targetUser = $this->Session->read(self::FUNCTION_NAME . $token);
+		$targetUser = $this->Session->read('MNG1000_' . $token);
 		if (is_null($targetUser)) {
 			$this->setAlertMessage('対象ユーザの編集は完了しています。', 'notice');
-			$this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
+			$this->redirect(['action' => 'index']);
             return;
 		}
 
@@ -128,7 +124,7 @@ class MNG1000Controller extends AppController
             }
 
             if ($userOfDb['User']['REVISION'] !== $userOfSession['User']['REVISION']) {
-                $this->setAlertMessage('削除対象のユーザは更新されているため削除できません。', 'error');
+                $this->setAlertMessage('削除対象のユーザは更新されているため削除できませんでした。', 'error');
                 throw new Exception();
             }
 
@@ -153,17 +149,17 @@ class MNG1000Controller extends AppController
     }
 
 	public function insert() {
-		$token = $this->requet->query('t');
+		$token = $this->requet->data('txtToken');
 		if (is_null($token)) {
 			throw new BadRequestException('トークンが未指定です。');
 		}
 
-		if (!$this->Session->check(self::FUNCTION_NAME . $token)) {
+		if (!$this->Session->check('MNG1000_' . $token)) {
 			$this->setAlertMessage('対象ユーザの編集は完了しています。', 'notice');
 			$this->redirect(['action' => 'index']);
             return;
 		}
-		$targetUser = $this->Session->read(self::FUNCTION_NAME . $token);
+		$targetUser = $this->Session->read('MNG1000_' . $token);
 
 		$inputValue = [
 			'USER_ID'      => $this->request->data('txtUserId')      ?: '',
