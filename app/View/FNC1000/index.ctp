@@ -18,7 +18,6 @@ echo $this->Form->create(false, ['url' => ['controller' => 'FNC1000', 'action' =
 		</div>
 	</div>
 </div>
-<?php echo $this->Form->input('element-id', ['type'=>'select', 'multiple'=>'checkbox', 'class'=>'element-class', 'options'=>['selection1', 'selection2', 'selection3'], 'label'=>'element-label', 'div'=>'element-div']); ?>
 
 <?php if (!empty($notifications)): ?>
 	<div class="mb-2 mb-md-4">

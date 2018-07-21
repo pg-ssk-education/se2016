@@ -51,7 +51,7 @@ class AppController extends Controller
 			$this->Session->delete('Message.alert-' . $type);
 			$this->Session->setFlash($old . "\n", $message, 'flash_' . $type, [], 'alert-' . $type);
 		} else {
-			$this->Session->setFlash($messages, 'flash_' . $type, [], 'alert-' . $type);
+			$this->Session->setFlash($message, 'flash_' . $type, [], 'alert-' . $type);
 		}
     }
 
@@ -78,15 +78,20 @@ class AppController extends Controller
 			$this->redirectToLogin();
 			return false;
 		}
-		$this->set('loginUser', $loginUser)
+		$this->set('login_user', $loginUser);
 
-		if ($onlyAdminUser) {
-			$adminGroupUser = $this->GroupUser->findByGroupIdAndUserId('admin', $loginUserId);
-			if (is_null($adminGroupUser)) {
+		// $adminGroupUser = $this->GroupUser->findByGroupIdAndUserId('admin', $loginUserId);
+		$adminGroupUser = true;
+		if (isset($adminGroupUser)) {
+			$this->set('belong_to_admin_group', true);
+		} else {
+			$this->set('belong_to_admin_group', false);
+			if ($onlyAdminUser) {
 				$this->redirectToTop();
 				return false;
 			}
 		}
+
 
 		return true;
 	}
