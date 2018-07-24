@@ -38,7 +38,7 @@
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" id="dropdown-mng" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">管理機能</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown-mng">
-								<a class="dropdown-item" href="#">ユーザ管理</a>
+								<?php echo $this->Html->Link('ユーザ管理', ['controller' => 'MNG1000', 'action' => 'index'], ['class' => 'dropdown-item']); ?>
 								<a class="dropdown-item" href="#">グループ管理</a>
 								<a class="dropdown-item" href="#">ワークフロー管理</a>
 							</div>

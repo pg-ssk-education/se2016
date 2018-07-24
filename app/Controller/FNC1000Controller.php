@@ -17,27 +17,25 @@ class FNC1000Controller extends AppController
         $this->redirect(['action' => 'index']);
     }
 
-    public function root()
-    {
-        $this->redirect(['action' => 'index']);
-    }
-
     public function index()
     {
-		// if the user has logged in, redirects to top page.
-		if (isset($this->Session)) {
-			if ($this->Session->check('loginUserId')) {
-				$this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
-				return;
-			}
-		}
+        if (isset($this->Session)) {
+            if ($this->Session->check('loginUserId')) {
+                $this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
+                return;
+            }
+        }
 
-		// restore input value from session.
-		if ($this->Session->check('FNC1000' . 'userId')) {
-            $this->set('user_id', $this->Session->check('FNC1000' . 'userId'));
+        if ($this->Session->check('FNC1000:userId')) {
+            $this->set('user_id', $this->Session->read('FNC1000:userId'));
         } else {
             $this->set('user_id', '');
         }
+
+        $this->set('admin/1234', Security::hash('administrator', 'sha256', true));
+        $this->set('user1/1234', Security::hash('testuser1', 'sha256', true));
+        $this->set('user2/1234', Security::hash('testuser2', 'sha256', true));
+        $this->set('user3/1234', Security::hash('testuser3', 'sha256', true));
 
         $this->set('title_for_layout', 'ログイン');
         $this->set('notifications', $this->Notification->findAllByTargetUserId(''));
@@ -46,13 +44,13 @@ class FNC1000Controller extends AppController
 
     public function login()
     {
-		// if the user has logged in, redirects to top page.
-		if (isset($this->Session)) {
-			if ($this->Session->check('loginUserId')) {
-				$this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
-				return;
-			}
-		}
+        // if the user has logged in, redirects to top page.
+        if (isset($this->Session)) {
+            if ($this->Session->check('loginUserId')) {
+                $this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
+                return;
+            }
+        }
 
         $userId = $this->request->data('txtUserId') ?: '';
         $unencryptedPassword = $this->request->data('txtPassword') ?: '';

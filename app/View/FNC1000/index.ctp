@@ -6,7 +6,7 @@ echo $this->Form->create(false, ['url' => ['controller' => 'FNC1000', 'action' =
 <div class="container-fluid">
 	<div class="row">
 		<div class="form-group col-12 col-sm-6 col-md-4 mb-2 mb-md-4">
-			<?php echo $this->Form->input('txtUserId', ['type' => 'text', 'class' => 'form-control', 'maxlength' => 32, 'label' => 'ログインID']); ?>
+			<?php echo $this->Form->input('txtUserId', ['type' => 'text', 'value' => h($user_id), 'class' => 'form-control', 'maxlength' => 32, 'label' => 'ログインID']); ?>
 		</div>
 	</div>
 	<div class="row">
