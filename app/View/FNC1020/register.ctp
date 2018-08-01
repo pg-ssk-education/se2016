@@ -1,4 +1,5 @@
 <?php
+echo $this->Html->script(['bootstrap-datepicker.min'], ['inline' => false]);
 echo $this->Form->create(false, ['url' => ['controller' => 'FNC1020', 'action' => 'register']]);
 ?>
         <div class="container-fluid">
@@ -6,27 +7,45 @@ echo $this->Form->create(false, ['url' => ['controller' => 'FNC1020', 'action' =
                 
                 <?php
                 echo $this->Form->input(
-                 'txtTitle','type' => 'text', 'class' => 'form-control',
-                 'label' =>['text' => 'タイトル'],
-                 'div' => ['class' => 'form-group col-12 col-sm-6 col-md-4 mb-2 mb-md-4']); ?>
-                <?php
+                 'txtTitle', [
+                 	'type' => 'text',
+                 	'class' => 'form-control',
+                 	'label' => ['text' => 'タイトル'],
+                 	'div' => ['class' => 'form-group col-12 col-sm-6 col-md-4 mb-2 mb-md-4']
+                 ]);
                 echo $this->Form->input(
-                 'txtContent','type' => 'text', 'class' => 'form-control',
-                 'label' =>['text' => '本文'],
-                 'div' => ['class' => 'form-group col-12 mb-2 mb-md-4']); ?>
-                <?php
+                 'txtContent', [
+                 	'type' => 'text',
+                 	'class' => 'form-control',
+                 	'label' =>['text' => '本文'],
+                 	'div' => ['class' => 'form-group col-12 mb-2 mb-md-4']
+                 ]);
                 echo $this->Form->input(
-                 'txtChoices','type' => 'text', 'class' => 'form-control',
-                 'label' =>['text' => '※カンマ区切りで入力してください。'],
-                 'div' => ['class' => 'form-group col-12 mb-2 mb-md-4']); ?>
+                 'txtChoices', [
+                 	'type' => 'text',
+                 	'class' => 'form-control',
+                 	'label' =>['text' => '※カンマ区切りで入力してください。'],
+                 	'div' => ['class' => 'form-group col-12 mb-2 mb-md-4']
+                 ]);
+                 ?>
             </div>
             <div class="row">
                 <div class="form-group col-12 col-sm-6 col-md-4 mb-2 mb-md-4">
                 <?php
                 echo $this->Form->input(
-                 'txtFrom','type' => 'text', 'class' => 'form-control','placeholder' => 'yyyy/mm/dd',
-                 'label' =>['for' => 'txtFrom', 'class' => 'cmn-required', 'text' => '有効期限&nbsp;From'],
-                 'div' => ['class' => 'input-group date'], 'id' => 'datepicker1'); ?>
+                 'txtFrom', [
+                 	'type' => 'text',
+                 	'class' => 'form-control',
+                 	'placeholder' => 'yyyy/mm/dd',
+                 	'label' =>[
+                 		'for' => 'txtFrom',
+                 		'class' => 'cmn-required',
+                 		'text' => '有効期限&nbsp;From'
+                 	],
+                 	'div' => ['class' => 'input-group date'],
+                 	'id' => 'datepicker1'
+                 ]); 
+                 ?>
                  <span class="input-group-addon">
                  <span class="glyphicon glypicon-calendar"></span>
                  </span>
@@ -35,9 +54,19 @@ echo $this->Form->create(false, ['url' => ['controller' => 'FNC1020', 'action' =
                 <div class="form-group col-12 col-sm-6 col-md-4 mb-2 mb-md-4">
                     <?php
                     echo $this->Form->input(
-                     'txtFrom','type' => 'text', 'class' => 'form-control','placeholder' => 'yyyy/mm/dd',
-                     'label' =>['for' => 'txtTo', 'class' => 'cmn-required', 'text' => 'To'],
-                     'div' => ['class' => 'input-group date'], 'id' => 'datepicker2'); ?>
+                     'txtFrom', [
+                     	'type' => 'text',
+                     	'class' => 'form-control',
+                     	'placeholder' => 'yyyy/mm/dd',
+                     	'label' =>[
+                     		'for' => 'txtTo',
+                     		'class' => 'cmn-required',
+                     		'text' => 'To'
+                     	],
+                     	'div' => ['class' => 'input-group date'],
+                     	'id' => 'datepicker2'
+                     ]);
+                     ?>
                      <span class="input-group-addon">
                      <span class="glyphicon glypicon-calendar"></span>
                      </span>
@@ -49,15 +78,23 @@ echo $this->Form->create(false, ['url' => ['controller' => 'FNC1020', 'action' =
                 
                 <?php
                 echo $this->Form->input(
-                 'txtPassword','type' => 'text', 'class' => 'form-control',
-                 'label' =>['text' => '管理用パスワード'],
-                 'div' => ['class' => 'form-group col-12 col-sm-6 col-md-4 mb-2 mb-md-4']); ?>
+                 'txtPassword', [
+                 	'type' => 'text',
+                 	'class' => 'form-control',
+                 	'label' =>['text' => '管理用パスワード'],
+                 	'div' => ['class' => 'form-group col-12 col-sm-6 col-md-4 mb-2 mb-md-4']
+                 ]);
+                 ?>
                 
                 <?php
                 echo $this->Form->input(
-                 'txtRetype','type' => 'text', 'class' => 'form-control',
-                 'label' =>['text' => '確認'],
-                 'div' => ['class' => 'form-group col-12 col-sm-6 col-md-4 mb-2 mb-md-4']); ?>
+                 'txtRetype', [
+                 	'type' => 'text',
+                 	'class' => 'form-control',
+                 	'label' => ['text' => '確認'],
+                 	'div' => ['class' => 'form-group col-12 col-sm-6 col-md-4 mb-2 mb-md-4']
+                 ]);
+                 ?>
                 
             </div>
             <div class="row">
@@ -69,3 +106,15 @@ echo $this->Form->create(false, ['url' => ['controller' => 'FNC1020', 'action' =
             </div>
         </div>
 <?php echo $this->Form->end(); ?>
+<script>
+    $(document).ready(function() {
+        $('#datepicker1').datepicker({
+            format: 'yyyy/mm/dd',
+            language: 'ja'
+        });
+        $('#datepicker2').datepicker({
+            format: 'yyyy/mm/dd',
+            language: 'ja'
+        });
+    });
+</script>

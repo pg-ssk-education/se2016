@@ -22,11 +22,6 @@ class FNC1020Controller extends AppController
     
     public function postRegister()
     {
-    	
-    }
-    
-    public function getRegister()
-    {
     	$inputValue = $this->Session->read('FNC1020:input');
     	
     	if (is_null($inputValue)) {
@@ -34,8 +29,23 @@ class FNC1020Controller extends AppController
     	}
     	
         $this->set('input_value', $inputValue);
+    	$this->redirect('register');
+    }
+    
+    public function getRegister()
+    {
+    	$inputValue = $this->request->data('input_value');
+    	// TODO Quetionaryのカラムを設定する 参考MNG1000Controller 168行目
+    	$this->Session->write('FNC1020:input',$inputValue);
+    	if (!$this->Questionary->validates(['fieldList' => array_keys($inputValue)])) {
+    		$this->setAlertMessages($this->Questionary->validationErrors, 'error');
+            $this->redirect(['action' => 'edit', '?' => ['t' => $token]]);
+            return;
+    	}
+    	
+        $this->set('input_value', $inputValue);
         
-        $this->render('register');
+        $this->render('index');
     	
     }
     
