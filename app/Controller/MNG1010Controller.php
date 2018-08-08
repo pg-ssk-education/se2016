@@ -161,8 +161,6 @@ class MNG1010Controller extends AppController
 		$targetGroup = $this->Session->read(self::FUNCTION_NAME . $token);
 
 		$inputValue = [
-			'ID'           => $this->request->data('txtId')      ?: '',
-            'GROUP_ID'     => $this->request->data('txtGroupId') ?: '',
             'NAME'         => $this->request->data('txtName')    ?: '',
             'COMMENT'      => $this->request->data('txtComment') ?: '',
 		];
@@ -178,59 +176,24 @@ class MNG1010Controller extends AppController
 		}
 
 		try {
-            $this->TransactionManager->begin();
+			$this->TransactionManager->begin();
 
-			if (!$this->User->save($userOfDb, false, array_keys($inputValue))) {
+			$groupOfDb = ['Group' => $inputValue];
+			
+			if (!$this->Group->save($groupOfDb, false, array_keys($inputValue))) {
 				$this->setAlertMessage('グループを登録できませんでした。', 'error');
-                throw new Exception();
+				throw new Exception();
 			}
 
-            $this->TransactionManager->commit();
-			$this->setAlertMessage(sprintf('%sを登録しました。',$userOfDb['User']['USER_NAME']), 'success');
+			$this->TransactionManager->commit();
+			$this->setAlertMessage(sprintf('%sを登録しました。', $groupOfDb['Group']['NAME']), 'success');
 			$this->Session->delete(self::FUNCTION_NAME . $token);
 			$this->redirect(['action' => 'index']);
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
+		} catch (Exception $e) {
+			$this->TransactionManager->rollback();
 			$this->redirect(['action' => 'edit', '?' => ['t' => $token]]);
-        }
-	}
-
-
-
-
-
-		if (isset($session[$token]['ID'])) {
-			$this->update($inputValue, $session, $token);
-		} else {
-			$this->insert($inputValue, $session, $token);
 		}
-
-        if ($session == null) {
-			throw new InternalErrorException('セッション変数が存在しません。');
-        }
-
-		if (!array_key_exists($token, $session])) {
-			$this->setAlertMessage('対象ユーザの編集は完了しています。', 'notice');
-			$this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
-            return;
-		}
-
-		$inputValue = [
-			'USER_ID'      => $this->request->data('txtUserId')      ?: '',
-            'NAME'         => $this->request->data('txtName')        ?: '',
-            'NAME_KANA'    => $this->request->data('txtNameKana')    ?: '',
-            'COMMENT'      => $this->request->data('txtComment')     ?: '',
-            'EMPLOYEE_NUM' => $this->request->data('txtEmployeeNum') ?: '',
-            'MAIL_ADDRESS' => $this->request->data('txtMailAddress') ?: '',
-		];
-
-		$session[$token] = array_replace($session[$token], $inputValue);
-		$this->Session->write(self::FUNCTION_NAME, $session);
-
-		$this->User->set(['User' => $inputValue]);
-        if (!$this->User->validates(['fieldList' => array_keys($inputValue)])) {
-        }
-
+		
 	}
 
 	private function redirectToIndex($token) {
