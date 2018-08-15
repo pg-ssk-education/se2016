@@ -45,18 +45,27 @@ class AppController extends Controller
 
     public function setAlertMessage($message, $type)
     {
-        // $type : error, success or notice
+        if ($type != 'error' && $type != 'success' && $type != 'notice') {
+            return;
+        }
+
 		if ($this->Session->check('Message.alert-' . $type)) {
-			$old = $this->Session->read('Message.alert-' . $type);
-			$this->Session->delete('Message.alert-' . $type);
-			$this->Session->setFlash($old . "\n", $message, 'flash_' . $type, [], 'alert-' . $type);
+//			$old = $this->Session->read('Message.alert-' . $type);
+//			$this->Session->delete('Message.alert-' . $type);
+			$this->Session->setFlash($message, 'flash_' . $type, [], 'alert-' . $type);
 		} else {
 			$this->Session->setFlash($message, 'flash_' . $type, [], 'alert-' . $type);
 		}
     }
 
 	public function setAlertMessages($messages, $type) {
-		$this->setAlertMessage(join("\n", $messages));
+        foreach ($messages as $message) {
+            if (is_string($message)) {
+                $this->setAlertMessage($message, $type);
+            } else if (is_array($message)) {
+                $this->setAlertMessages($message, $type);
+            }
+        }
 	}
 
 	public function checkAuth($onlyAdminUser = false) {
