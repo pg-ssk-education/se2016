@@ -21,6 +21,13 @@
 
 App::uses('Controller', 'Controller');
 
+function ifnull($value, $default) {
+	if ($value === null) {
+		return $default;
+	}
+	return $value;
+}
+
 /**
  * Application Controller
  *
@@ -42,7 +49,7 @@ class AppController extends Controller
         'Paginator' => ['className' => 'TwitterBootstrap.BootstrapPaginator']
     ];
     public $layout = 'bootstrap4';
-
+    
     public function setAlertMessage($message, $type)
     {
         // $type : error, success or notice

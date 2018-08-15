@@ -2,33 +2,34 @@
 class InvalidAccess extends AppModel
 {
     public $useTable = 't_invalid_access';
-    public $primaryKey = 'ACCESS_ID';
+    public $primaryKey = 'ID';
 
-    public function findCountByClientIpWithinLastOneMinute($clientIp)
+    public function findCountByClientIp($clientIp)
     {
         $conditions = [
-            'InvalidAccess.CLIENT_IP' => $clientIp,
-            ['InvalidAccess.INS_DATETIME >= NOW() - INTERVAL 60 SECOND']
+            'InvalidAccess.CLIENT_IP' => $clientIp
         ];
-        $return = $this->find('count', ['conditions' => $conditions]);
-
+        $result = $this->find('count', ['conditions' => $conditions]);
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
-        return $return;
+        return $result;
     }
 
-    public function deleteOverOneMinute()
+    public function deleteBefore($interval)
     {
-        $conditions = [['InvalidAccess.INS_DATETIME <= NOW() - INTERVAL 60 MINUTE']];
+    	$now = new DateTime();
+    	$dateIntervalForDalete = DateInterval::createFromDateString($interval);
+    	$thresoldInsDatetimeForDelete = date_format(date_sub($now, $dateIntervalForDalete), 'Y-m-d H:i:s');
+        $conditions = [
+        	["InvalidAccess.INS_DATETIME <= '$thresoldInsDatetimeForDelete'"]
+        ];
         $this->deleteAll($conditions, false);
-
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
     }
-
-    public function deleteAllByClientIp($clientIp)
+    
+    public function save($data = null, $validate = true, $fieldList = [])
     {
-        $conditions = ['InvalidAccess.CLIENT_IP' => $clientIp];
-        $this->deleteAll($conditions, false);
-
+		$result = parent::save($data, $validate, $fieldList);
         $this->log($this->getDataSource()->getLog(), LOG_INFO);
+        return $result;
     }
 }
