@@ -4,7 +4,7 @@ body {
 }
 
 .cmn-required:after {
-    content :"(必須)";
+    content :" (必須)";
     color   :red;
 }
 

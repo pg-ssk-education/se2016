@@ -12,7 +12,7 @@ echo $this->Form->create(false, ['url' => ['controller' => 'FNC1000', 'action' =
 	</div>
 	<div class="row">
 		<div class="col-12 mb-2 mb-md-4">
-			<?php echo $this->Html->link('ログイン', 'javascript:void(0)', ['id' => 'btnLogin', 'class' => 'btn btn-primary px-3 px-sm-5 mx-1', 'role' => 'button']); ?>
+			<?php echo $this->Html->link('ログイン', 'javascript:void(0)', ['class' => 'btn btn-primary px-3 px-sm-5', 'role' => 'button', 'data-action' => 'login', 'id' => 'btnLogin']) ?>
 		</div>
 	</div>
 </div>
@@ -42,4 +42,3 @@ $('#btnLogin').click(function() {
 	$('form').submit();
 });
 </script>
-

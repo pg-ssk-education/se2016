@@ -8,7 +8,7 @@ echo $this->Form->create(false, ['url' => ['controller' => 'MNG1000', 'action' =
 	<div class="row">
 		<div class="col-12 mb-2 mb-md-4">
 			<?php
-			echo $this->Html->link('新規ユーザを作成', '#', ['class' => 'btn btn-primary px-3 px-sm-5', 'role' => 'button', 'data-action' => 'add']);
+			echo $this->Html->link('新規ユーザを作成', 'javascript:void(0)', ['class' => 'btn btn-primary px-3 px-sm-5', 'role' => 'button', 'data-action' => 'add']);
 			?>
 		</div>
 	</div>
@@ -45,6 +45,7 @@ echo $this->Form->create(false, ['url' => ['controller' => 'MNG1000', 'action' =
 <?php echo $this->Form->end(); ?>
 
 <script type="text/javascript">
+<!--
 $(document).ready(function() {
     $('#users').dataTable({});
 });
@@ -65,4 +66,5 @@ $('a[data-action="delete"]').click(function() {
 		$('form').submit();
 	}
 });
+-->
 </script>
