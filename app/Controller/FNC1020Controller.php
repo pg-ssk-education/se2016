@@ -45,9 +45,20 @@ class FNC1020Controller extends AppController
     	
         $this->set('input_value', $inputValue);
         
-        $this->render('index');
+        $this->redirect('index');
     	
     }
     
+	public function qr() {
+	
+		$id = $this->request->query('id');
+		if (is_null($id)) {
+			throw new BadRequestException('ID‚ª–¢w’è‚Å‚·B');
+		}
+
+		$this->set('id' , $id);
+
+		$this->render('qr');
+	}
 }
     
