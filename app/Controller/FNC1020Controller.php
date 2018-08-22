@@ -5,7 +5,10 @@ class FNC1020Controller extends AppController
     public $uses = ['QuestionaryAnswer', 'Questionary'];
     public $components = ['Security'];
     
+    public function index()
+    {
     
+    }
     
     
     public function register()
@@ -29,13 +32,21 @@ class FNC1020Controller extends AppController
     	}
     	
         $this->set('input_value', $inputValue);
-    	$this->redirect('register');
+    	$this->render('register');
     }
     
     public function getRegister()
     {
-    	$inputValue = $this->request->data('input_value');
+    	//$inputValue = $this->request->data('input_value');
     	// TODO Quetionaryのカラムを設定する 参考MNG1000Controller 168行目
+    	$inputValue = [
+            'TITLE'          => $this->request->data('txtTitle')        ?: '',
+            'CONTENT'        => $this->request->data('txtContent')    ?: '',
+            'DISP_FROM'      => $this->request->data('txtFrom')     ?: '',
+            'DISP_TO'        => $this->request->data('txtTo') ?: '',
+            'PASSWORD'       => $this->request->data('txtPassword') ?: '',
+		];
+		
     	$this->Session->write('FNC1020:input',$inputValue);
     	if (!$this->Questionary->validates(['fieldList' => array_keys($inputValue)])) {
     		$this->setAlertMessages($this->Questionary->validationErrors, 'error');
