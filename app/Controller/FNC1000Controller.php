@@ -2,8 +2,12 @@
 class FNC1000Controller extends AppController
 {
     public $helpers = ['Html', 'Form'];
-    public $uses = ['Notification', 'User', 'InvalidAccess'];
+    public $uses = ['Notification', 'User', 'InvalidAccess', 'TransactionManager'];
     public $components = ['Security'];
+    
+    const SESSION_USER_ID = 'FNC1000:userId';
+    const INTERVAL_FOR_COUNT_INVALID_ACCESS = '5 minutes';
+    const LIMIT_COUNT_OF_INVALID_ACCESS = 3;
 
     public function beforeFilter()
     {
@@ -16,27 +20,14 @@ class FNC1000Controller extends AppController
         $this->setAlertMessage('予期しないエラーが発生しました。', 'error');
         $this->redirect(['action' => 'index']);
     }
-
+    
     public function index()
     {
-        if (isset($this->Session)) {
-            if ($this->Session->check('loginUserId')) {
-                $this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
-                return;
-            }
-        }
-
-        if ($this->Session->check('FNC1000:userId')) {
-            $this->set('user_id', $this->Session->read('FNC1000:userId'));
-        } else {
-            $this->set('user_id', '');
-        }
-
-        $this->set('admin/1234', Security::hash('administrator', 'sha256', true));
-        $this->set('user1/1234', Security::hash('testuser1', 'sha256', true));
-        $this->set('user2/1234', Security::hash('testuser2', 'sha256', true));
-        $this->set('user3/1234', Security::hash('testuser3', 'sha256', true));
-
+    	if ($this->redirectToTopPageIfLoggedIn()) {
+    		return;
+    	}
+    	
+    	$this->set('user_id', ifnull($this->Session->read(self::SESSION_USER_ID), ''));
         $this->set('title_for_layout', 'ログイン');
         $this->set('notifications', $this->Notification->findAllByTargetUserId(''));
         $this->render('index');
@@ -44,40 +35,52 @@ class FNC1000Controller extends AppController
 
     public function login()
     {
-        // if the user has logged in, redirects to top page.
-        if (isset($this->Session)) {
-            if ($this->Session->check('loginUserId')) {
-                $this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
-                return;
-            }
-        }
+    	if ($this->redirectToTopPageIfLoggedIn()) {
+    		return;
+    	}
 
-        $userId = $this->request->data('txtUserId') ?: '';
-        $unencryptedPassword = $this->request->data('txtPassword') ?: '';
+        $userId = ifnull($this->request->data('txtUserId'), '');
+        $unencryptedPassword = ifnull($this->request->data('txtPassword'), '');
+        $this->Session->write(self::SESSION_USER_ID, $userId);
 
-        $this->Session->write('FNC1000' . 'userId', $userId);
+		try {
+			$this->TransactionManager->begin();
+			
+			$clientIp = $this->getClientIp();
+			$this->InvalidAccess->deleteBefore(self::INTERVAL_FOR_COUNT_INVALID_ACCESS);
+			$invalidAccessCount = $this->InvalidAccess->findCountByClientIp($clientIp);
+			if ($invalidAccessCount >= self::LIMIT_COUNT_OF_INVALID_ACCESS) {
+ 	            $this->setAlertMessage('規定回数間違ったためロックされています。しばらく経ってからログインしてください。', 'error');
+		        $this->TransactionManager->commit();
+				$this->redirect(['action' => 'index']);
+				return;
+			}
 
-        $this->InvalidAccess->deleteOverOneMinute();
-        $invalidAccessCountWithinLastOneMinute = $this->InvalidAccess->findCountByClientIpWithinLastOneMinute($this->getClientIp());
-        if ($invalidAccessCountWithinLastOneMinute >= 3) {
-            $this->redirect(['action' => 'index']);
-            return;
-        }
-
-        $user = $this->User->findByUserIdAndUnencryptedPassword($userId, $unencryptedPassword);
-        if (empty($user)) {
-            $this->InvalidAccess->create(['CLIENT_IP' => $this->getClientIp()]);
-            $this->InvalidAccess->save();
-            $this->setAlertMessage('ログインできません。ユーザＩＤ、パスワードを確認してください。', 'error');
-            $this->redirect(['action' => 'index']);
-            return;
-        }
-
-        $this->InvalidAccess->deleteAllByClientIp($this->getClientIp());
-        $this->Session->write('loginUserId', $userId);
-        $this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
+	        $user = $this->User->findByUserIdAndUnencryptedPassword($userId, $unencryptedPassword);
+	        if (empty($user)) {
+	            $this->InvalidAccess->create();
+	            $invalidAccess = [
+	            	'CLIENT_IP'    => $clientIp,
+	            	'INS_DATETIME' => date_format(new DateTime(), 'Y-m-d H:i:s'),
+	            	'INS_USER_ID'  => $userId
+	            ];
+	            $this->InvalidAccess->save(['InvalidAccess' => $invalidAccess], false);
+		        $this->TransactionManager->commit();
+	            $this->setAlertMessage('ログインできません。ユーザＩＤ、パスワードを確認してください。', 'error');
+	            $this->redirect(['action' => 'index']);
+				return;
+	        }
+	        
+	        $this->TransactionManager->commit();
+	        $this->Session->write('loginUserId', $userId);
+	        $this->Session->delete(self::SESSION_USER_ID);
+	        $this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
+	    } catch (Exception $e) {
+	    	$this->TransactionManager->rollback();
+	    	throw new InternalErrorException($e->message);
+	    }
     }
-
+    
     public function logout()
     {
         $this->Session->destroy();
@@ -88,4 +91,16 @@ class FNC1000Controller extends AppController
     {
         return $this->request->clientIp(false);
     }
+    
+    private function redirectToTopPageIfLoggedIn() {
+    	if (isset($this->Session)) {
+    		if ($this->Session->check('loginUserId')) {
+                $this->redirect(['controller' => 'FNC1010', 'action' => 'index']);
+                return true;
+    		}
+    	}
+    	
+    	return false;
+    }
+    
 }

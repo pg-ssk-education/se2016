@@ -14,8 +14,7 @@ echo $this->Form->create(false, ['url' => ['controller' => 'FNC1000', 'action' =
 			<?php echo $this->Form->input('txtPassword', ['type' => 'password', 'class' => 'form-control', 'maxlength' => 32, 'label' => 'パスワード']); ?>
 		</div>
 		<div class="col-12 mb-2 mb-md-4">
-			<a href="#" class="btn btn-primary px-3 px-sm-5" role="button" data-action="add">ログイン</a>
-			<?php echo $this->Form->button('ログイン', ['type' => 'submit', 'class' => 'btn btn-primary px-3 px-sm-5']); ?>
+			<?php echo $this->Html->link('ログイン', 'javascript:void(0)', ['class' => 'btn btn-primary px-3 px-sm-5', 'role' => 'button', 'data-action' => 'login', 'id' => 'btnLogin'])
 		</div>
 	</div>
 </div>
@@ -40,3 +39,10 @@ echo $this->Form->create(false, ['url' => ['controller' => 'FNC1000', 'action' =
 <?php endif; ?>
 
 <?php echo $this->Form->end(); ?>
+<script>
+$(document).ready(function() {
+	$('a[data-action="login"]').click(function() {
+		$('form').submit();
+	})
+})
+</script>
