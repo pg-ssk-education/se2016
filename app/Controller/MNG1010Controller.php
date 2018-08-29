@@ -161,12 +161,18 @@ class MNG1010Controller extends AppController
 		$targetGroup = $this->Session->read(self::FUNCTION_NAME . $token);
 
 		$inputValue = [
-            'NAME'         => $this->request->data('txtName')    ?: '',
-            'COMMENT'      => $this->request->data('txtComment') ?: '',
+            'GROUP_ID'  => $this->request->data('txtGroupId')    ?: '',
+            'NAME'      => $this->request->data('txtName') ?: '',
+            'COMMENT'   => $this->request->data('txtComment') ?: ''
 		];
 
 		$targetGroup = array_replace($targetGroup, $inputValue);
 		$this->Session->write(self::FUNCTION_NAME . $token, $targetGroup);
+
+		$group = $this->Group->create();
+        $group['Group']['GROUP_ID'] = $inputValue['GROUP_ID'];
+        $user['Group']['NAME'] = $inputValue['NAME'];
+        $user['Group']['COMMENT'] = $inputValue['COMMENT'];
 
 		$this->Group->set(['Group' => $targetGroup]);
 		if (!$this->User->validates(['fieldList' => array_keys($inputValue)])) {
@@ -211,142 +217,50 @@ class MNG1010Controller extends AppController
 		try {
 			$this->TransactionManager->begin();
 
-			$userOfDb = $this->User->findById($session[$token]['ID'], true);
-			if ($userOfDb == null) {
-				$this->setAlertMessage('更新対象のユーザは削除されています。', 'error');
+			$groupOfDb = $this->User->findById($session[$token]['ID'], true);
+			if ($groupOfDb == null) {
+				$this->setAlertMessage('更新対象のグループは削除されています。', 'error');
 				$this->redirect(['controller' => $, 'action' => 'index']);
 				throw new Exception();
 			}
 
-			if ($user['User']['ROW_NUM'] != $userOfDb['User']['ROW_NUM'] || $user['User']['REVISION'] != $userOfDb['User']['REVISION']) {
-				$this->setAlertMessage('更新対象のユーザは更新されているため変更できません。', 'error');
-				$this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
+			if ($group['Group']['REVISION'] != $groupOfDb['Group']['REVISION']) {
+				$this->setAlertMessage('更新対象のグループは更新されているため変更できません。', 'error');
+				$this->redirect(['action' => 'index']);
 				throw new Exception();
 			}
 
-			$this->User->set($user);
-			if (!$this->User->validates()) {
-				$this->setAlertMessage($this->User->validationErrors, 'error');
-				$this->redirect(['controller' => 'CMN2000', 'action' => 'edituser', 'id' => $token]);
+			$this->Group->set($group);
+			if (!$this->Group->validates()) {
+				$this->setAlertMessage($this->Group->validationErrors, 'error');
+				$this->redirect(['action' => 'edit', 'id' => $token]);
 				throw new Exception();
 			}
 
-			$userOfDb['User'] = array_replace($userOfDb['User'], [
-				'NAME'         => $user['User']['NAME'],
-				'NAME_KANA'    => $user['User']['NAME_KANA'],
-				'COMMENT'      => $user['User']['COMMENT'],
-				'EMPLOYEE_NUM' => $user['User']['EMPLOYEE_NUM'],
-				'MAIL_ADDRESS' => $user['User']['MAIL_ADDRESS'],
+			$groupOfDb['Group'] = array_replace($groupOfDb['Group'], [
+				'NAME'    => $group['Group']['NAME'],
+				'COMMENT'      => $group['Group']['COMMENT'],
 				'UPD_DATETIME' => $this->getNow(),
 				'UPD_USER_ID'  => $this->Session->read('loginUserId'),
-				'REVISION'     => $userOfDb['User']['REVISION'] + 1
+				'REVISION'     => $groupOfDb['Group']['REVISION'] + 1
 			]);
 
-			if (!$this->saveUser($userOfDb)) {
+			if (!$this->saveGroup($groupOfDb)) {
 				$this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
-				$this->redirect(['controller' => 'CMN2000', 'action' => 'edituser', 'id' => $token]);
+				$this->redirect(['action' => 'edit', 'id' => $token]);
 				throw new Exception();
 			}
 
 			$this->TransactionManager->commit();
+            $this->setAlertMessage(sprintf('%sを更新しました。', $groupOfDb['Group']['GROUP_NAME']), 'success');
+            $this->Session->delete(self::FUNCTION_NAME . $token);
+            $this->redirect(['action' => 'index']);
 		} catch (Exception $e) {
 			$this->TransactionManager->rollback();
 			return;
 		}
-
-		unset($session[$token]);
-		$this->Session->write('CMN2000', $session);
-		$this->setAlertMessage('更新しました。', 'success');
-		$this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-
 	}
 
-
-
-
-		$userOfSession = $this->getUserFromSession($userId);
-		if (is_null($userId)) {
-			throw new BadRequestException('指定されたユーザIDがユーザ一覧に存在しません。');
-		}
-
-
-
-        $session = array_replace($session, [$token => $user]);
-        $this->Session->write('CMN2000', $session);
-
-
-
-	}
-
-
-
-
-
-
-
-//        if (!array_key_exists('t', $this->params['named'])) {
-//            $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
-//            return;
-//        }
-//        $token = $this->params['named']['t'];
-        $token = $this->params['named']['t'];
-        if (!isset($token)) {
-            $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
-            return;
-        }
-        $session = $this->Session->read(self::FUNCTION_NAME);
-        if ($session == null || !array_key_exists($token, $session)) {
-            $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
-            return;
-        }
-
-        $this->set('title_for_layout', 'ユーザ管理:編集');
-        $this->set('method', $session[$token]['method']);
-		$this->set('user', $session[$token]['user']);
-        $this->set('token', $token);
-        $this->render('edit');
-    }
-
-    public function save() {
-        if (!$this->checkLoggedIn()) {
-            return;
-        }
-
-        $token = $this->params['named']['t'];
-        if (!isset($token)) {
-            $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
-            return;
-        }
-        $session = $this->Session->read(self::FUNCTION_NAME);
-        if ($session == null || !array_key_exists($token, $session)) {
-            $this->redirect(['controller' => self::FUNCTION_NAME, 'action' => 'index']);
-            return;
-        }
-        $user = $session[$token];
-
-        $user = [
-            'User' => [
-                'USER_ID'      => $this->request->data('txtUserId')      ?: '',
-                'NAME'         => $this->request->data('txtName')        ?: '',
-                'NAME_KANA'    => $this->request->data('txtNameKana')    ?: '',
-                'COMMENT'      => $this->request->data('txtComment')     ?: '',
-                'EMPLOYEE_NUM' => $this->request->data('txtEmployeeNum') ?: '',
-                'MAIL_ADDRESS' => $this->request->data('txtMailAddress') ?: '',
-            ]
-        ];
-
-
-
-
-            if ($this->request->is('post')) {
-                $this->postAdd();
-            } else {
-                $this->getAdd();
-            }
-        }
-
-
-    }
 
     public function getNewToken()
     {
@@ -360,180 +274,6 @@ class MNG1010Controller extends AppController
 			$token = uniqid();
 		}
 		return $token;
-    }
-
-    public function insert()
-    {
-        if (!$this->checkLogin()) {
-            return;
-        }
-
-        if (!array_key_exists('id', $this->params['named'])) {
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            return;
-        }
-        $token = $this->params['named']['id'];
-
-        $session = $this->Session->read('CMN2000');
-        if ($session == null) {
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            return;
-        }
-
-        $user = [
-            'User' => [
-                'USER_ID'      => $this->request->data('txtUserId')      ?: '',
-                'NAME'         => $this->request->data('txtName')        ?: '',
-                'NAME_KANA'    => $this->request->data('txtNameKana')    ?: '',
-                'COMMENT'      => $this->request->data('txtComment')     ?: '',
-                'EMPLOYEE_NUM' => $this->request->data('txtEmployeeNum') ?: '',
-                'MAIL_ADDRESS' => $this->request->data('txtMailAddress') ?: '',
-            ]
-        ];
-
-        $session = array_replace($session, [$token => $user]);
-        $this->Session->write('CMN2000', $session);
-
-        $this->User->set($user);
-        if (!$this->User->validates()) {
-            $this->setAlertMessage($this->User->validationErrors, 'error');
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
-            return;
-        }
-
-        try {
-            $this->TransactionManager->begin();
-
-            if ($this->User->findByUserId($user['User']['USER_ID']) != null) {
-                $this->setAlertMessage('ユーザIDが重複しています。', 'error');
-                $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
-                throw new Exception();
-            }
-            if ($this->User->findDeletedByUserId($user['User']['USER_ID']) != null) {
-                $this->setAlertMessage('削除されたユーザとユーザIDが重複しています。', 'error');
-                $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
-                throw new Exception();
-            }
-
-            $user['User'] = array_replace($user['User'], [
-                'INS_USER_ID'  => $this->Session->read('loginUserId'),
-                'UPD_USER_ID'  => $this->Session->read('loginUserId')
-            ]);
-            if (!$this->saveUser($user)) {
-                $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
-                $this->redirect(['controller' => 'CMN2000', 'action' => 'adduser', 'id' => $token]);
-                throw new Exception();
-            }
-            $this->TransactionManager->commit();
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            return;
-        }
-
-        unset($session[$token]);
-        $this->Session->write('CMN2000', $session);
-        $this->setAlertMessage('登録しました。', 'success');
-        $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-    }
-
-    public function saveUser($user)
-    {
-        return $this->User->save($user, false);
-    }
-
-    public function update()
-    {
-        if (!$this->checkLogin()) {
-            return;
-        }
-
-        if (!array_key_exists('id', $this->params['named'])) {
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            return;
-        }
-
-        $token = $this->params['named']['id'];
-        $session = $this->Session->read('CMN2000');
-        if ($session == null || !array_key_exists($token, $session)) {
-            $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-            return;
-        }
-
-        $user = $session[$token];
-        $user['User'] = array_replace($user['User'], [
-            'NAME'         => $this->request->data('txtName')        ?: '',
-            'NAME_KANA'    => $this->request->data('txtNameKana')    ?: '',
-            'COMMENT'      => $this->request->data('txtComment')     ?: '',
-            'EMPLOYEE_NUM' => $this->request->data('txtEmployeeNum') ?: '',
-            'MAIL_ADDRESS' => $this->request->data('txtMailAddress') ?: '',
-        ]);
-
-        $session = array_replace($session, [$token => $user]);
-        $this->Session->write('CMN2000', $session);
-
-        try {
-            $this->TransactionManager->begin();
-
-            $userOfDb = $this->User->findByUserId($user['User']['USER_ID'], true);
-            if ($userOfDb == null) {
-                $this->setAlertMessage('更新対象のユーザは削除されています。', 'error');
-                $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-                throw new Exception();
-            }
-
-            if ($user['User']['ROW_NUM'] != $userOfDb['User']['ROW_NUM'] || $user['User']['REVISION'] != $userOfDb['User']['REVISION']) {
-                $this->setAlertMessage('更新対象のユーザは更新されているため変更できません。', 'error');
-                $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-                throw new Exception();
-            }
-
-            $this->User->set($user);
-            if (!$this->User->validates()) {
-                $this->setAlertMessage($this->User->validationErrors, 'error');
-                $this->redirect(['controller' => 'CMN2000', 'action' => 'edituser', 'id' => $token]);
-                throw new Exception();
-            }
-
-            $userOfDb['User'] = array_replace($userOfDb['User'], [
-                'NAME'         => $user['User']['NAME'],
-                'NAME_KANA'    => $user['User']['NAME_KANA'],
-                'COMMENT'      => $user['User']['COMMENT'],
-                'EMPLOYEE_NUM' => $user['User']['EMPLOYEE_NUM'],
-                'MAIL_ADDRESS' => $user['User']['MAIL_ADDRESS'],
-                'UPD_DATETIME' => $this->getNow(),
-                'UPD_USER_ID'  => $this->Session->read('loginUserId'),
-                'REVISION'     => $userOfDb['User']['REVISION'] + 1
-            ]);
-
-            if (!$this->saveUser($userOfDb)) {
-                $this->setAlertMessage('予期せぬエラーが発生しました。', 'error');
-                $this->redirect(['controller' => 'CMN2000', 'action' => 'edituser', 'id' => $token]);
-                throw new Exception();
-            }
-
-            $this->TransactionManager->commit();
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            return;
-        }
-
-        unset($session[$token]);
-        $this->Session->write('CMN2000', $session);
-        $this->setAlertMessage('更新しました。', 'success');
-        $this->redirect(['controller' => 'CMN2000', 'action' => 'index']);
-    }
-
-
-    public function getUserFromSession($userId)
-    {
-        $session = $this->Session->read('CMN2000');
-        $users = $session['Users'];
-        foreach ($users as $user) {
-            if ($user['User']['USER_ID'] == $userId) {
-                return $user;
-            }
-        }
-        return null;
     }
 
     public function getNow()
